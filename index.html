@@ -1,1 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Datálogo — Portal de Acceso</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --azul: #0F4C75;
+      --azul-medio: #3282B8;
+      --teal: #00C9A7;
+      --gris-claro: #F4F8FC;
+      --gris-texto: #64748B;
+      --error: #EF4444;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Sora', sans-serif; background: var(--azul); min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+    body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse at 20% 50%, rgba(50,130,184,0.3) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(0,201,167,0.15) 0%, transparent 50%); pointer-events: none; }
+    body::after { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
+    .container { position: relative; z-index: 10; width: 100%; max-width: 440px; padding: 20px; }
+    .logo-area { text-align: center; margin-bottom: 36px; animation: fadeDown 0.6s ease both; }
+    .logo-mark { width: 56px; height: 56px; background: linear-gradient(135deg, var(--teal), var(--azul-medio)); border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 14px; box-shadow: 0 8px 32px rgba(0,201,167,0.3); }
+    .logo-mark svg { width: 28px; height: 28px; fill: white; }
+    .logo-nombre { font-size: 26px; font-weight: 700; color: white; letter-spacing: -0.5px; }
+    .logo-nombre span { color: var(--teal); }
+    .logo-tagline { font-size: 12px; color: rgba(255,255,255,0.5); font-weight: 300; margin-top: 4px; }
+    .card { background: rgba(255,255,255,0.97); border-radius: 20px; padding: 40px; box-shadow: 0 25px 60px rgba(0,0,0,0.3); animation: fadeUp 0.6s ease 0.1s both; }
+    .card-titulo { font-size: 20px; font-weight: 600; color: var(--azul); margin-bottom: 6px; }
+    .card-subtitulo { font-size: 13px; color: var(--gris-texto); margin-bottom: 28px; line-height: 1.5; }
+    .tabs { display: flex; background: var(--gris-claro); border-radius: 10px; padding: 4px; margin-bottom: 28px; gap: 4px; }
+    .tab { flex: 1; padding: 9px; border: none; background: transparent; border-radius: 8px; font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 500; color: var(--gris-texto); cursor: pointer; transition: all 0.2s ease; }
+    .tab.activo { background: white; color: var(--azul); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 12px; font-weight: 600; color: var(--azul); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.3px; }
+    .form-input { width: 100%; padding: 12px 16px; border: 1.5px solid #E2E8F0; border-radius: 10px; font-family: 'Sora', sans-serif; font-size: 14px; color: #1E293B; background: white; transition: all 0.2s ease; outline: none; }
+    .form-input:focus { border-color: var(--azul-medio); box-shadow: 0 0 0 3px rgba(50,130,184,0.1); }
+    .btn-primary { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--azul), var(--azul-medio)); color: white; border: none; border-radius: 10px; font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; margin-top: 8px; }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(15,76,117,0.35); }
+    .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .btn-primary .spinner { display: none; width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto; }
+    .btn-primary.cargando .btn-text { display: none; }
+    .btn-primary.cargando .spinner { display: block; }
+    .mensaje { padding: 12px 16px; border-radius: 10px; font-size: 13px; margin-bottom: 16px; display: none; line-height: 1.5; }
+    .mensaje.error { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; display: block; }
+    .mensaje.exito { background: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; display: block; }
+    .mensaje.info { background: #EFF6FF; color: #1E40AF; border: 1px solid #BFDBFE; display: block; }
+    .verificacion-pendiente { text-align: center; padding: 10px 0; }
+    .verificacion-icon { width: 64px; height: 64px; background: linear-gradient(135deg, #EFF6FF, #BFDBFE); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; }
+    .verificacion-titulo { font-size: 18px; font-weight: 600; color: var(--azul); margin-bottom: 10px; }
+    .verificacion-texto { font-size: 13px; color: var(--gris-texto); line-height: 1.6; margin-bottom: 24px; }
+    .verificacion-email { font-weight: 600; color: var(--azul); }
+    .btn-secundario { background: none; border: 1.5px solid var(--azul); color: var(--azul); padding: 10px 24px; border-radius: 8px; font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .btn-secundario:hover { background: var(--azul); color: white; }
+    .empresas-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+    .empresa-card { display: flex; align-items: center; gap: 16px; padding: 16px 20px; border: 1.5px solid #E2E8F0; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; background: white; text-align: left; width: 100%; font-family: 'Sora', sans-serif; }
+    .empresa-card:hover { border-color: var(--azul-medio); box-shadow: 0 4px 16px rgba(15,76,117,0.12); transform: translateY(-2px); }
+    .empresa-icono { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .empresa-info { flex: 1; }
+    .empresa-nombre { font-size: 14px; font-weight: 600; color: #1E293B; margin-bottom: 2px; }
+    .empresa-giro { font-size: 12px; color: var(--gris-texto); }
+    .empresa-arrow { color: #CBD5E1; font-size: 18px; transition: all 0.2s; }
+    .empresa-card:hover .empresa-arrow { color: var(--azul); transform: translateX(4px); }
+    .saludo-usuario { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--gris-claro); border-radius: 10px; margin-bottom: 24px; }
+    .avatar { width: 36px; height: 36px; background: linear-gradient(135deg, var(--azul), var(--azul-medio)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 14px; flex-shrink: 0; }
+    .saludo-texto { flex: 1; }
+    .saludo-nombre { font-size: 13px; font-weight: 600; color: var(--azul); }
+    .saludo-email { font-size: 11px; color: var(--gris-texto); }
+    .btn-logout { background: none; border: none; color: var(--gris-texto); cursor: pointer; font-size: 11px; font-family: 'Sora', sans-serif; padding: 4px 8px; border-radius: 6px; transition: all 0.2s; }
+    .btn-logout:hover { background: #FEF2F2; color: var(--error); }
+    .footer-portal { text-align: center; margin-top: 20px; font-size: 11px; color: rgba(255,255,255,0.35); animation: fadeDown 0.6s ease 0.3s both; }
+    .fade-in { animation: fadeUp 0.3s ease both; }
+    @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (max-width: 480px) { .card { padding: 28px 24px; } .container { padding: 16px; } }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="logo-area">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+    </div>
+    <div class="logo-nombre">Dat<span>a</span>logo</div>
+    <div class="logo-tagline">Datos que responden. Sistemas que actuan.</div>
+  </div>
 
+  <div class="card" id="card-main">
+    <div id="pantalla-auth">
+      <div class="tabs">
+        <button class="tab activo" onclick="cambiarTab('login')" id="tab-login">Iniciar sesion</button>
+        <button class="tab" onclick="cambiarTab('registro')" id="tab-registro">Registrarse</button>
+      </div>
+      <div id="mensaje-auth" class="mensaje"></div>
+      <div id="form-login">
+        <div class="form-group">
+          <label class="form-label">Correo electronico</label>
+          <input type="email" class="form-input" id="login-email" placeholder="tu@correo.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contrasena</label>
+          <input type="password" class="form-input" id="login-password" placeholder="••••••••">
+        </div>
+        <button class="btn-primary" id="btn-login" onclick="handleLogin()">
+          <span class="btn-text">Entrar al portal</span>
+          <div class="spinner"></div>
+        </button>
+      </div>
+      <div id="form-registro" style="display:none">
+        <div class="form-group">
+          <label class="form-label">Nombre completo</label>
+          <input type="text" class="form-input" id="registro-nombre" placeholder="Juan Perez">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Correo electronico</label>
+          <input type="email" class="form-input" id="registro-email" placeholder="tu@correo.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contrasena</label>
+          <input type="password" class="form-input" id="registro-password" placeholder="Minimo 6 caracteres">
+        </div>
+        <button class="btn-primary" id="btn-registro" onclick="handleRegistro()">
+          <span class="btn-text">Crear cuenta</span>
+          <div class="spinner"></div>
+        </button>
+      </div>
+    </div>
+
+    <div id="pantalla-verificacion" style="display:none">
+      <div class="verificacion-pendiente fade-in">
+        <div class="verificacion-icon">email</div>
+        <div class="verificacion-titulo">Verifica tu correo</div>
+        <p class="verificacion-texto">Enviamos un enlace de activacion a<br><span class="verificacion-email" id="email-verificacion"></span><br><br>Revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.</p>
+        <button class="btn-secundario" onclick="volverLogin()">Volver al inicio</button>
+      </div>
+    </div>
+
+    <div id="pantalla-empresas" style="display:none">
+      <div class="fade-in">
+        <div class="saludo-usuario">
+          <div class="avatar" id="avatar-inicial"></div>
+          <div class="saludo-texto">
+            <div class="saludo-nombre" id="saludo-nombre"></div>
+            <div class="saludo-email" id="saludo-email"></div>
+          </div>
+          <button class="btn-logout" onclick="handleLogout()">Salir</button>
+        </div>
+        <div class="card-titulo">Selecciona tu empresa</div>
+        <p class="card-subtitulo">Elige el sistema al que deseas acceder.</p>
+        <div id="mensaje-empresas" class="mensaje"></div>
+        <div class="empresas-grid" id="empresas-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-portal">2026 Datalogo - Todos los derechos reservados</div>
+</div>
+
+<script>
+var API = 'https://api.datalogo.lat';
+var usuarioActual = null;
+
+window.onload = function() {
+  var token = localStorage.getItem('datalago_token');
+  var usuario = localStorage.getItem('datalogo_usuario');
+  if (token && usuario) {
+    try { usuarioActual = JSON.parse(usuario); mostrarEmpresasOCargar(token); } catch(e) { localStorage.clear(); }
+  }
+  document.getElementById('login-password').addEventListener('keypress', function(e) { if (e.key === 'Enter') handleLogin(); });
+  document.getElementById('login-email').addEventListener('keypress', function(e) { if (e.key === 'Enter') handleLogin(); });
+};
+
+function cambiarTab(tab) {
+  limpiarMensaje('mensaje-auth');
+  if (tab === 'login') {
+    document.getElementById('form-login').style.display = 'block';
+    document.getElementById('form-registro').style.display = 'none';
+    document.getElementById('tab-login').classList.add('activo');
+    document.getElementById('tab-registro').classList.remove('activo');
+  } else {
+    document.getElementById('form-login').style.display = 'none';
+    document.getElementById('form-registro').style.display = 'block';
+    document.getElementById('tab-login').classList.remove('activo');
+    document.getElementById('tab-registro').classList.add('activo');
+  }
+}
+
+function handleLogin() {
+  var email = document.getElementById('login-email').value.trim();
+  var password = document.getElementById('login-password').value;
+  if (!email || !password) { mostrarMensaje('mensaje-auth', 'error', 'Completa todos los campos.'); return; }
+  setBtnCargando('btn-login', true);
+  limpiarMensaje('mensaje-auth');
+  fetch(API + '/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, password: password }) })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.exito) {
+      localStorage.setItem('datalago_token', data.token);
+      localStorage.setItem('datalogo_usuario', JSON.stringify(data.usuario));
+      usuarioActual = data.usuario;
+      mostrarEmpresasOCargar(data.token);
+    } else if (data.requiere_verificacion) {
+      document.getElementById('email-verificacion').textContent = email;
+      mostrarPantalla('verificacion');
+    } else {
+      mostrarMensaje('mensaje-auth', 'error', data.error || 'Error al iniciar sesion.');
+    }
+  })
+  .catch(function() { mostrarMensaje('mensaje-auth', 'error', 'Error de conexion. Intenta nuevamente.'); })
+  .finally(function() { setBtnCargando('btn-login', false); });
+}
+
+function handleRegistro() {
+  var nombre = document.getElementById('registro-nombre').value.trim();
+  var email = document.getElementById('registro-email').value.trim();
+  var password = document.getElementById('registro-password').value;
+  if (!nombre || !email || !password) { mostrarMensaje('mensaje-auth', 'error', 'Completa todos los campos.'); return; }
+  if (password.length < 6) { mostrarMensaje('mensaje-auth', 'error', 'La contrasena debe tener al menos 6 caracteres.'); return; }
+  setBtnCargando('btn-registro', true);
+  limpiarMensaje('mensaje-auth');
+  fetch(API + '/auth/registro', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nombre: nombre, email: email, password: password }) })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.exito && data.requiere_verificacion) {
+      document.getElementById('email-verificacion').textContent = email;
+      mostrarPantalla('verificacion');
+    } else if (data.exito) {
+      mostrarMensaje('mensaje-auth', 'exito', 'Cuenta creada. Ya puedes iniciar sesion.');
+      cambiarTab('login');
+    } else {
+      mostrarMensaje('mensaje-auth', 'error', data.error || 'Error al registrar.');
+    }
+  })
+  .catch(function() { mostrarMensaje('mensaje-auth', 'error', 'Error de conexion. Intenta nuevamente.'); })
+  .finally(function() { setBtnCargando('btn-registro', false); });
+}
+
+function mostrarEmpresasOCargar(token) {
+  fetch(API + '/auth/empresa', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: token }) })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (!data.exito) { handleLogout(); return; }
+    mostrarPantalla('empresas');
+    if (data.es_admin) {
+      var arr = [];
+      if (Array.isArray(data.empresas)) {
+        arr = data.empresas;
+      } else if (data.empresas && typeof data.empresas === 'object') {
+        var keys = Object.keys(data.empresas);
+        for (var i = 0; i < keys.length; i++) {
+          var id = keys[i];
+          var emp = data.empresas[id];
+          if (emp && emp.url) arr.push({ id: id, nombre: emp.nombre, url: emp.url });
+        }
+      }
+      renderizarEmpresas(arr);
+    } else {
+      if (data.empresa && data.empresa.url) {
+        window.location.href = data.empresa.url;
+      } else {
+        renderizarEmpresas([]);
+      }
+    }
+  })
+  .catch(function() { mostrarMensaje('mensaje-auth', 'error', 'Error al cargar empresas.'); });
+}
+
+function renderizarEmpresas(empresas) {
+  var nombre = usuarioActual ? usuarioActual.nombre : 'Usuario';
+  var email = usuarioActual ? usuarioActual.email : '';
+  document.getElementById('avatar-inicial').textContent = nombre.charAt(0).toUpperCase();
+  document.getElementById('saludo-nombre').textContent = 'Hola, ' + nombre.split(' ')[0];
+  document.getElementById('saludo-email').textContent = email;
+  var grid = document.getElementById('empresas-grid');
+  if (!empresas.length) {
+    var m = document.getElementById('mensaje-empresas');
+    m.className = 'mensaje info'; m.textContent = 'Sin empresa asignada. Contacta al administrador.'; m.style.display = 'block';
+    grid.innerHTML = ''; return;
+  }
+  var iconos = { carnes: { emoji: 'carne', color: '#FEF2F2', borde: '#FECACA' }, plasticos: { emoji: 'fabrica', color: '#EFF6FF', borde: '#BFDBFE' } };
+  var nombres = { carnes: 'Carnes y Culinarios Selectos', plasticos: 'Plasticos del Norte S.A. de C.V.' };
+  var giros = { carnes: 'Distribucion y comercializacion de carnes', plasticos: 'Manufactura de productos plasticos' };
+  var html = '';
+  for (var i = 0; i < empresas.length; i++) {
+    var e = empresas[i];
+    var ic = iconos[e.id] || { emoji: 'empresa', color: '#F8FAFC', borde: '#E2E8F0' };
+    html += '<button class="empresa-card" onclick="window.location.href=\'' + e.url + '\'">';
+    html += '<div class="empresa-icono" style="background:' + ic.color + ';border:1.5px solid ' + ic.borde + '">' + ic.emoji + '</div>';
+    html += '<div class="empresa-info"><div class="empresa-nombre">' + (nombres[e.id] || e.nombre) + '</div><div class="empresa-giro">' + (giros[e.id] || '') + '</div></div>';
+    html += '<div class="empresa-arrow">-></div></button>';
+  }
+  grid.innerHTML = html;
+}
+
+function handleLogout() {
+  localStorage.removeItem('datalago_token'); localStorage.removeItem('datalogo_usuario'); usuarioActual = null;
+  mostrarPantalla('auth'); limpiarMensaje('mensaje-auth');
+}
+
+function volverLogin() { mostrarPantalla('auth'); cambiarTab('login'); }
+
+function mostrarPantalla(p) {
+  document.getElementById('pantalla-auth').style.display = p === 'auth' ? 'block' : 'none';
+  document.getElementById('pantalla-verificacion').style.display = p === 'verificacion' ? 'block' : 'none';
+  document.getElementById('pantalla-empresas').style.display = p === 'empresas' ? 'block' : 'none';
+}
+
+function mostrarMensaje(id, tipo, texto) {
+  var el = document.getElementById(id); el.className = 'mensaje ' + tipo; el.textContent = texto; el.style.display = 'block';
+}
+
+function limpiarMensaje(id) { var el = document.getElementById(id); el.style.display = 'none'; el.className = 'mensaje'; }
+
+function setBtnCargando(id, c) {
+  var b = document.getElementById(id);
+  if (c) { b.classList.add('cargando'); b.disabled = true; } else { b.classList.remove('cargando'); b.disabled = false; }
+}
+</script>
+</body>
+</html>
