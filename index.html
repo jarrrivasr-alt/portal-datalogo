@@ -741,7 +741,15 @@
       mostrarPantalla('empresas');
 
       if (data.es_admin) {
-        renderizarSaludoYEmpresas(data.empresas, 'admin');
+  // Normalizar: convertir objeto a array si es necesario
+      let empresasArray = data.empresas;
+        if (!Array.isArray(empresasArray)) {
+        empresasArray = Object.entries(empresasArray)
+        .filter(([id, emp]) => emp.url)
+        .map(([id, emp]) => ({ id, nombre: emp.nombre, url: emp.url }));
+      }
+      renderizarSaludoYEmpresas(empresasArray, 'admin');
+    }
       } else {
         // Usuario normal — redirigir directo
         window.location.href = data.empresa.url;
