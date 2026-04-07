@@ -1,750 +1,321 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Datálogo — Portal de Acceso</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --azul:    #0F4C75;
-      --azul-m:  #3282B8;
-      --teal:    #00C9A7;
-      --teal-dim:#00a589;
-      --blanco:  #ffffff;
-      --gris-bg: #f0f4f8;
-      --gris-borde: #dde3ea;
-      --gris-txt: #6b7a8d;
-      --rojo:    #e05252;
-      --font:    'Sora', sans-serif;
-      --shadow:  0 8px 32px rgba(15,76,117,.12);
-      --shadow-sm: 0 2px 10px rgba(15,76,117,.08);
+      --azul: #0F4C75;
+      --azul-medio: #3282B8;
+      --teal: #00C9A7;
+      --gris-claro: #F4F8FC;
+      --gris-texto: #64748B;
+      --error: #EF4444;
     }
-
-    html, body {
-      min-height: 100%;
-      font-family: var(--font);
-      background: var(--gris-bg);
-      color: var(--azul);
-    }
-
-    /* ─── FONDO DECORATIVO ─── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(0,201,167,.08) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 60% at 10% 80%, rgba(50,130,184,.07) 0%, transparent 60%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* ─── LAYOUT PRINCIPAL ─── */
-    .page {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 32px 16px;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* ─── LOGO / BRAND ─── */
-    .brand {
-      text-align: center;
-      margin-bottom: 36px;
-      animation: fadeDown .6s ease both;
-    }
-    .brand-nombre {
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: var(--azul);
-      letter-spacing: -.5px;
-    }
-    .brand-nombre span { color: var(--teal); }
-    .brand-tagline {
-      font-size: .78rem;
-      font-weight: 400;
-      color: var(--gris-txt);
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      margin-top: 4px;
-    }
-
-    /* ─── CARD ─── */
-    .card {
-      background: var(--blanco);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      width: 100%;
-      max-width: 440px;
-      overflow: hidden;
-      animation: fadeUp .6s ease .1s both;
-    }
-
-    /* ─── TABS ─── */
-    .tabs {
-      display: flex;
-      border-bottom: 2px solid var(--gris-borde);
-    }
-    .tab-btn {
-      flex: 1;
-      padding: 18px;
-      background: none;
-      border: none;
-      font-family: var(--font);
-      font-size: .9rem;
-      font-weight: 500;
-      color: var(--gris-txt);
-      cursor: pointer;
-      transition: color .2s, background .2s;
-      position: relative;
-    }
-    .tab-btn::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0; right: 0;
-      height: 2px;
-      background: var(--teal);
-      transform: scaleX(0);
-      transition: transform .2s;
-    }
-    .tab-btn.activo {
-      color: var(--azul);
-      background: rgba(0,201,167,.04);
-    }
-    .tab-btn.activo::after { transform: scaleX(1); }
-
-    /* ─── FORM BODY ─── */
-    .form-body {
-      padding: 32px 36px 36px;
-    }
-
-    .form-titulo {
-      font-size: 1.15rem;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-    .form-subtitulo {
-      font-size: .8rem;
-      color: var(--gris-txt);
-      margin-bottom: 28px;
-    }
-
-    .campo {
-      margin-bottom: 18px;
-    }
-    .campo label {
-      display: block;
-      font-size: .78rem;
-      font-weight: 600;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-      color: var(--gris-txt);
-      margin-bottom: 7px;
-    }
-    .campo input {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1.5px solid var(--gris-borde);
-      border-radius: 10px;
-      font-family: var(--font);
-      font-size: .92rem;
-      color: var(--azul);
-      background: var(--gris-bg);
-      transition: border-color .2s, box-shadow .2s;
-      outline: none;
-    }
-    .campo input:focus {
-      border-color: var(--teal);
-      box-shadow: 0 0 0 3px rgba(0,201,167,.12);
-      background: var(--blanco);
-    }
-    .campo input::placeholder { color: #b0bac6; }
-
-    /* ─── BTN PRIMARIO ─── */
-    .btn-primary {
-      width: 100%;
-      padding: 14px;
-      background: var(--azul);
-      color: var(--blanco);
-      border: none;
-      border-radius: 10px;
-      font-family: var(--font);
-      font-size: .95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background .2s, transform .12s, box-shadow .2s;
-      margin-top: 8px;
-      box-shadow: 0 4px 14px rgba(15,76,117,.25);
-    }
-    .btn-primary:hover {
-      background: #0d3f62;
-      box-shadow: 0 6px 20px rgba(15,76,117,.35);
-    }
-    .btn-primary:active { transform: scale(.98); }
-    .btn-primary:disabled {
-      background: var(--gris-txt);
-      box-shadow: none;
-      cursor: not-allowed;
-    }
-
-    /* ─── ALERTAS ─── */
-    .alerta {
-      padding: 12px 14px;
-      border-radius: 9px;
-      font-size: .84rem;
-      margin-bottom: 18px;
-      display: none;
-      line-height: 1.5;
-    }
-    .alerta.visible { display: block; }
-    .alerta.error   { background: #fff0f0; color: var(--rojo); border: 1px solid #f5c6c6; }
-    .alerta.ok      { background: #f0fdf9; color: #007a5e; border: 1px solid #b2eadd; }
-    .alerta.info    { background: #eef6ff; color: var(--azul); border: 1px solid #bdd9f5; }
-
-    /* ─── PANTALLA EMAIL NO VERIFICADO ─── */
-    #pantalla-verificacion {
-      display: none;
-      padding: 36px;
-      text-align: center;
-    }
-    .icono-correo {
-      font-size: 3rem;
-      margin-bottom: 16px;
-    }
-    #pantalla-verificacion h3 {
-      font-size: 1.1rem;
-      margin-bottom: 10px;
-    }
-    #pantalla-verificacion p {
-      font-size: .85rem;
-      color: var(--gris-txt);
-      line-height: 1.6;
-    }
-    .btn-secundario {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 10px 22px;
-      border: 1.5px solid var(--gris-borde);
-      border-radius: 9px;
-      font-family: var(--font);
-      font-size: .84rem;
-      font-weight: 500;
-      color: var(--gris-txt);
-      background: none;
-      cursor: pointer;
-      transition: border-color .2s, color .2s;
-    }
-    .btn-secundario:hover { border-color: var(--teal); color: var(--azul); }
-
-    /* ─── PANTALLA EMPRESAS (ADMIN) ─── */
-    #pantalla-empresas {
-      display: none;
-      padding: 32px 36px 36px;
-    }
-    .saludo-usuario {
-      font-size: .82rem;
-      color: var(--gris-txt);
-      margin-bottom: 4px;
-    }
-    .saludo-nombre {
-      font-size: 1.2rem;
-      font-weight: 700;
-      margin-bottom: 24px;
-    }
-    .badge-admin {
-      display: inline-block;
-      background: rgba(0,201,167,.15);
-      color: var(--teal-dim);
-      font-size: .7rem;
-      font-weight: 700;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      padding: 3px 9px;
-      border-radius: 20px;
-      margin-left: 8px;
-      vertical-align: middle;
-    }
-    .empresas-titulo {
-      font-size: .75rem;
-      font-weight: 700;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--gris-txt);
-      margin-bottom: 14px;
-    }
-    .lista-empresas { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-
-    .empresa-card {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 16px 18px;
-      border: 1.5px solid var(--gris-borde);
-      border-radius: 12px;
-      cursor: pointer;
-      text-decoration: none;
-      color: inherit;
-      background: var(--gris-bg);
-      transition: border-color .2s, box-shadow .2s, background .2s;
-    }
-    .empresa-card:hover {
-      border-color: var(--teal);
-      box-shadow: var(--shadow-sm);
-      background: var(--blanco);
-    }
-    .empresa-icono {
-      width: 42px; height: 42px;
-      background: var(--azul);
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      color: white;
-      font-size: 1.2rem;
-      flex-shrink: 0;
-    }
-    .empresa-info { flex: 1; min-width: 0; }
-    .empresa-nombre {
-      font-size: .95rem;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .empresa-url {
-      font-size: .74rem;
-      color: var(--gris-txt);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .empresa-flecha { color: var(--gris-txt); font-size: .9rem; }
-
-    .btn-logout {
-      width: 100%;
-      margin-top: 24px;
-      padding: 11px;
-      background: none;
-      border: 1.5px solid var(--gris-borde);
-      border-radius: 10px;
-      font-family: var(--font);
-      font-size: .84rem;
-      font-weight: 500;
-      color: var(--gris-txt);
-      cursor: pointer;
-      transition: border-color .2s, color .2s;
-    }
-    .btn-logout:hover { border-color: var(--rojo); color: var(--rojo); }
-
-    /* ─── SPINNER ─── */
-    .spinner {
-      display: inline-block;
-      width: 16px; height: 16px;
-      border: 2px solid rgba(255,255,255,.3);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin .7s linear infinite;
-      vertical-align: middle;
-      margin-right: 6px;
-    }
-
-    /* ─── ANIMACIONES ─── */
-    @keyframes fadeUp   { from { opacity:0; transform:translateY(20px) } to { opacity:1; transform:translateY(0) } }
-    @keyframes fadeDown { from { opacity:0; transform:translateY(-16px) } to { opacity:1; transform:translateY(0) } }
-    @keyframes spin     { to { transform: rotate(360deg) } }
-
-    /* ─── FOOTER ─── */
-    .footer {
-      margin-top: 28px;
-      font-size: .72rem;
-      color: var(--gris-txt);
-      text-align: center;
-      animation: fadeUp .6s ease .25s both;
-    }
-
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 480px) {
-      .form-body, #pantalla-empresas { padding: 24px 22px 28px; }
-      .brand-nombre { font-size: 1.8rem; }
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Sora', sans-serif; background: var(--azul); min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+    body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse at 20% 50%, rgba(50,130,184,0.3) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(0,201,167,0.15) 0%, transparent 50%); pointer-events: none; }
+    body::after { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
+    .container { position: relative; z-index: 10; width: 100%; max-width: 440px; padding: 20px; }
+    .logo-area { text-align: center; margin-bottom: 36px; animation: fadeDown 0.6s ease both; }
+    .logo-mark { width: 56px; height: 56px; background: linear-gradient(135deg, var(--teal), var(--azul-medio)); border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 14px; box-shadow: 0 8px 32px rgba(0,201,167,0.3); }
+    .logo-mark svg { width: 28px; height: 28px; fill: white; }
+    .logo-nombre { font-size: 26px; font-weight: 700; color: white; letter-spacing: -0.5px; }
+    .logo-nombre span { color: var(--teal); }
+    .logo-tagline { font-size: 12px; color: rgba(255,255,255,0.5); font-weight: 300; margin-top: 4px; }
+    .card { background: rgba(255,255,255,0.97); border-radius: 20px; padding: 40px; box-shadow: 0 25px 60px rgba(0,0,0,0.3); animation: fadeUp 0.6s ease 0.1s both; }
+    .card-titulo { font-size: 20px; font-weight: 600; color: var(--azul); margin-bottom: 6px; }
+    .card-subtitulo { font-size: 13px; color: var(--gris-texto); margin-bottom: 28px; line-height: 1.5; }
+    .tabs { display: flex; background: var(--gris-claro); border-radius: 10px; padding: 4px; margin-bottom: 28px; gap: 4px; }
+    .tab { flex: 1; padding: 9px; border: none; background: transparent; border-radius: 8px; font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 500; color: var(--gris-texto); cursor: pointer; transition: all 0.2s ease; }
+    .tab.activo { background: white; color: var(--azul); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 12px; font-weight: 600; color: var(--azul); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.3px; }
+    .form-input { width: 100%; padding: 12px 16px; border: 1.5px solid #E2E8F0; border-radius: 10px; font-family: 'Sora', sans-serif; font-size: 14px; color: #1E293B; background: white; transition: all 0.2s ease; outline: none; }
+    .form-input:focus { border-color: var(--azul-medio); box-shadow: 0 0 0 3px rgba(50,130,184,0.1); }
+    .btn-primary { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--azul), var(--azul-medio)); color: white; border: none; border-radius: 10px; font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; margin-top: 8px; }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(15,76,117,0.35); }
+    .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .btn-primary .spinner { display: none; width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto; }
+    .btn-primary.cargando .btn-text { display: none; }
+    .btn-primary.cargando .spinner { display: block; }
+    .mensaje { padding: 12px 16px; border-radius: 10px; font-size: 13px; margin-bottom: 16px; display: none; line-height: 1.5; }
+    .mensaje.error { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; display: block; }
+    .mensaje.exito { background: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; display: block; }
+    .mensaje.info { background: #EFF6FF; color: #1E40AF; border: 1px solid #BFDBFE; display: block; }
+    .verificacion-pendiente { text-align: center; padding: 10px 0; }
+    .verificacion-icon { width: 64px; height: 64px; background: linear-gradient(135deg, #EFF6FF, #BFDBFE); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; }
+    .verificacion-titulo { font-size: 18px; font-weight: 600; color: var(--azul); margin-bottom: 10px; }
+    .verificacion-texto { font-size: 13px; color: var(--gris-texto); line-height: 1.6; margin-bottom: 24px; }
+    .verificacion-email { font-weight: 600; color: var(--azul); }
+    .btn-secundario { background: none; border: 1.5px solid var(--azul); color: var(--azul); padding: 10px 24px; border-radius: 8px; font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .btn-secundario:hover { background: var(--azul); color: white; }
+    .empresas-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+    .empresa-card { display: flex; align-items: center; gap: 16px; padding: 16px 20px; border: 1.5px solid #E2E8F0; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; background: white; text-align: left; width: 100%; font-family: 'Sora', sans-serif; }
+    .empresa-card:hover { border-color: var(--azul-medio); box-shadow: 0 4px 16px rgba(15,76,117,0.12); transform: translateY(-2px); }
+    .empresa-icono { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .empresa-info { flex: 1; }
+    .empresa-nombre { font-size: 14px; font-weight: 600; color: #1E293B; margin-bottom: 2px; }
+    .empresa-giro { font-size: 12px; color: var(--gris-texto); }
+    .empresa-arrow { color: #CBD5E1; font-size: 18px; transition: all 0.2s; }
+    .empresa-card:hover .empresa-arrow { color: var(--azul); transform: translateX(4px); }
+    .saludo-usuario { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--gris-claro); border-radius: 10px; margin-bottom: 24px; }
+    .avatar { width: 36px; height: 36px; background: linear-gradient(135deg, var(--azul), var(--azul-medio)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 14px; flex-shrink: 0; }
+    .saludo-texto { flex: 1; }
+    .saludo-nombre { font-size: 13px; font-weight: 600; color: var(--azul); }
+    .saludo-email { font-size: 11px; color: var(--gris-texto); }
+    .btn-logout { background: none; border: none; color: var(--gris-texto); cursor: pointer; font-size: 11px; font-family: 'Sora', sans-serif; padding: 4px 8px; border-radius: 6px; transition: all 0.2s; }
+    .btn-logout:hover { background: #FEF2F2; color: var(--error); }
+    .footer-portal { text-align: center; margin-top: 20px; font-size: 11px; color: rgba(255,255,255,0.35); animation: fadeDown 0.6s ease 0.3s both; }
+    .fade-in { animation: fadeUp 0.3s ease both; }
+    @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (max-width: 480px) { .card { padding: 28px 24px; } .container { padding: 16px; } }
   </style>
 </head>
 <body>
-
-<div class="page">
-
-  <!-- MARCA -->
-  <div class="brand">
-    <div class="brand-nombre">Data<span>logo</span></div>
-    <div class="brand-tagline">Datos que responden. Sistemas que actúan.</div>
+<div class="container">
+  <div class="logo-area">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+    </div>
+    <div class="logo-nombre">Dat<span>a</span>logo</div>
+    <div class="logo-tagline">Datos que responden. Sistemas que actuan.</div>
   </div>
 
-  <!-- CARD PRINCIPAL -->
-  <div class="card" id="card-auth">
-
-    <!-- TABS: LOGIN / REGISTRO -->
-    <div class="tabs" id="tabs">
-      <button class="tab-btn activo" data-tab="login" onclick="cambiarTab('login')">Iniciar sesión</button>
-      <button class="tab-btn" data-tab="registro" onclick="cambiarTab('registro')">Registrarse</button>
+  <div class="card" id="card-main">
+    <div id="pantalla-auth">
+      <div class="tabs">
+        <button class="tab activo" onclick="cambiarTab('login')" id="tab-login">Iniciar sesion</button>
+        <button class="tab" onclick="cambiarTab('registro')" id="tab-registro">Registrarse</button>
+      </div>
+      <div id="mensaje-auth" class="mensaje"></div>
+      <div id="form-login">
+        <div class="form-group">
+          <label class="form-label">Correo electronico</label>
+          <input type="email" class="form-input" id="login-email" placeholder="tu@correo.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contrasena</label>
+          <input type="password" class="form-input" id="login-password" placeholder="••••••••">
+        </div>
+        <button class="btn-primary" id="btn-login" onclick="handleLogin()">
+          <span class="btn-text">Entrar al portal</span>
+          <div class="spinner"></div>
+        </button>
+      </div>
+      <div id="form-registro" style="display:none">
+        <div class="form-group">
+          <label class="form-label">Nombre completo</label>
+          <input type="text" class="form-input" id="registro-nombre" placeholder="Juan Perez">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Correo electronico</label>
+          <input type="email" class="form-input" id="registro-email" placeholder="tu@correo.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contrasena</label>
+          <input type="password" class="form-input" id="registro-password" placeholder="Minimo 6 caracteres">
+        </div>
+        <button class="btn-primary" id="btn-registro" onclick="handleRegistro()">
+          <span class="btn-text">Crear cuenta</span>
+          <div class="spinner"></div>
+        </button>
+      </div>
     </div>
 
-    <!-- ── PANEL LOGIN ── -->
-    <div id="panel-login" class="form-body">
-      <div class="form-titulo">Bienvenido de vuelta</div>
-      <div class="form-subtitulo">Ingresa tus credenciales para continuar</div>
-
-      <div class="alerta error" id="error-login"></div>
-
-      <div class="campo">
-        <label>Correo electrónico</label>
-        <input type="email" id="login-email" placeholder="tu@correo.com" autocomplete="email" />
+    <div id="pantalla-verificacion" style="display:none">
+      <div class="verificacion-pendiente fade-in">
+        <div class="verificacion-icon">email</div>
+        <div class="verificacion-titulo">Verifica tu correo</div>
+        <p class="verificacion-texto">Enviamos un enlace de activacion a<br><span class="verificacion-email" id="email-verificacion"></span><br><br>Revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.</p>
+        <button class="btn-secundario" onclick="volverLogin()">Volver al inicio</button>
       </div>
-      <div class="campo">
-        <label>Contraseña</label>
-        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" />
-      </div>
-      <button class="btn-primary" id="btn-login" onclick="hacerLogin()">Entrar</button>
     </div>
 
-    <!-- ── PANEL REGISTRO ── -->
-    <div id="panel-registro" class="form-body" style="display:none">
-      <div class="form-titulo">Crear cuenta</div>
-      <div class="form-subtitulo">Completa los datos para registrarte</div>
-
-      <div class="alerta error"  id="error-registro"></div>
-      <div class="alerta ok"     id="ok-registro"></div>
-
-      <div class="campo">
-        <label>Nombre completo</label>
-        <input type="text" id="reg-nombre" placeholder="Juan Pérez" autocomplete="name" />
+    <div id="pantalla-empresas" style="display:none">
+      <div class="fade-in">
+        <div class="saludo-usuario">
+          <div class="avatar" id="avatar-inicial"></div>
+          <div class="saludo-texto">
+            <div class="saludo-nombre" id="saludo-nombre"></div>
+            <div class="saludo-email" id="saludo-email"></div>
+          </div>
+          <button class="btn-logout" onclick="handleLogout()">Salir</button>
+        </div>
+        <div class="card-titulo">Selecciona tu empresa</div>
+        <p class="card-subtitulo">Elige el sistema al que deseas acceder.</p>
+        <div id="mensaje-empresas" class="mensaje"></div>
+        <div class="empresas-grid" id="empresas-grid"></div>
       </div>
-      <div class="campo">
-        <label>Correo electrónico</label>
-        <input type="email" id="reg-email" placeholder="tu@correo.com" autocomplete="email" />
-      </div>
-      <div class="campo">
-        <label>Contraseña</label>
-        <input type="password" id="reg-pass" placeholder="Mínimo 8 caracteres" autocomplete="new-password" />
-      </div>
-      <button class="btn-primary" id="btn-registro" onclick="hacerRegistro()">Crear cuenta</button>
     </div>
+  </div>
 
-    <!-- ── PANTALLA: EMAIL NO VERIFICADO ── -->
-    <div id="pantalla-verificacion">
-      <div class="icono-correo">📬</div>
-      <h3>Verifica tu correo</h3>
-      <p id="msg-verificacion">
-        Te enviamos un enlace de confirmación. Revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.
-      </p>
-      <button class="btn-secundario" onclick="volverALogin()">← Volver al inicio de sesión</button>
-    </div>
-
-    <!-- ── PANTALLA: EMPRESAS (ADMIN) ── -->
-    <div id="pantalla-empresas">
-      <div class="saludo-usuario">Hola,</div>
-      <div class="saludo-nombre" id="nombre-usuario">
-        —
-        <span class="badge-admin" id="badge-admin" style="display:none">Admin</span>
-      </div>
-      <div class="empresas-titulo">Selecciona una empresa</div>
-      <ul class="lista-empresas" id="lista-empresas"></ul>
-      <button class="btn-logout" onclick="cerrarSesion()">Cerrar sesión</button>
-    </div>
-
-  </div><!-- /card -->
-
-  <div class="footer">© 2026 Datálogo · jarr.rivasr@gmail.com · 2231083676</div>
-
-</div><!-- /page -->
+  <div class="footer-portal">2026 Datalogo - Todos los derechos reservados</div>
+</div>
 
 <script>
-  /* ════════════════════════════════════
-     CONFIGURACIÓN
-  ════════════════════════════════════ */
-  const API = 'https://api.datalogo.lat';
+var API = 'https://api.datalogo.lat';
+var usuarioActual = null;
 
-  /* ════════════════════════════════════
-     ESTADO
-  ════════════════════════════════════ */
-  let tabActual = 'login';
-
-  /* ════════════════════════════════════
-     TABS
-  ════════════════════════════════════ */
-  function cambiarTab(tab) {
-    tabActual = tab;
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('activo', b.dataset.tab === tab));
-    document.getElementById('panel-login').style.display    = tab === 'login'    ? 'block' : 'none';
-    document.getElementById('panel-registro').style.display = tab === 'registro' ? 'block' : 'none';
-    limpiarAlertas();
+window.onload = function() {
+  var token = localStorage.getItem('datalago_token');
+  var usuario = localStorage.getItem('datalogo_usuario');
+  if (token && usuario) {
+    try { usuarioActual = JSON.parse(usuario); mostrarEmpresasOCargar(token); } catch(e) { localStorage.clear(); }
   }
+  document.getElementById('login-password').addEventListener('keypress', function(e) { if (e.key === 'Enter') handleLogin(); });
+  document.getElementById('login-email').addEventListener('keypress', function(e) { if (e.key === 'Enter') handleLogin(); });
+};
 
-  function limpiarAlertas() {
-    document.querySelectorAll('.alerta').forEach(a => { a.classList.remove('visible'); a.textContent = ''; });
+function cambiarTab(tab) {
+  limpiarMensaje('mensaje-auth');
+  if (tab === 'login') {
+    document.getElementById('form-login').style.display = 'block';
+    document.getElementById('form-registro').style.display = 'none';
+    document.getElementById('tab-login').classList.add('activo');
+    document.getElementById('tab-registro').classList.remove('activo');
+  } else {
+    document.getElementById('form-login').style.display = 'none';
+    document.getElementById('form-registro').style.display = 'block';
+    document.getElementById('tab-login').classList.remove('activo');
+    document.getElementById('tab-registro').classList.add('activo');
   }
+}
 
-  function mostrarAlerta(id, texto, tipo) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.className = `alerta ${tipo} visible`;
-    el.textContent = texto;
-  }
-
-  /* ════════════════════════════════════
-     PANTALLAS
-  ════════════════════════════════════ */
-  function mostrarPantalla(nombre) {
-    document.getElementById('tabs').style.display                  = nombre === 'auth'         ? 'flex'  : 'none';
-    document.getElementById('panel-login').style.display           = nombre === 'login'        ? 'block' : 'none';
-    document.getElementById('panel-registro').style.display        = nombre === 'registro'     ? 'block' : 'none';
-    document.getElementById('pantalla-verificacion').style.display = nombre === 'verificacion' ? 'block' : 'none';
-    document.getElementById('pantalla-empresas').style.display     = nombre === 'empresas'     ? 'block' : 'none';
-  }
-
-  function volverALogin() {
-    mostrarPantalla('login');
-    document.getElementById('tabs').style.display = 'flex';
-    cambiarTab('login');
-  }
-
-  /* ════════════════════════════════════
-     LOGIN
-  ════════════════════════════════════ */
-  async function hacerLogin() {
-    const email = document.getElementById('login-email').value.trim();
-    const pass  = document.getElementById('login-pass').value;
-
-    if (!email || !pass) { mostrarAlerta('error-login', 'Completa todos los campos.', 'error'); return; }
-
-    const btn = document.getElementById('btn-login');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>Verificando...';
-
-    try {
-      const res  = await fetch(`${API}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password: pass })
-      });
-      const data = await res.json();
-
-      if (!data.exito) {
-        // ── Detectar email no verificado
-        const msg = (data.error || data.mensaje || '').toLowerCase();
-        if (msg.includes('verifica') || msg.includes('verificado') || msg.includes('confirm')) {
-          mostrarPantalla('verificacion');
-          document.getElementById('msg-verificacion').textContent =
-            `Aún no has verificado tu cuenta (${email}). Revisa tu bandeja de entrada y haz clic en el enlace que te enviamos.`;
-        } else {
-          mostrarAlerta('error-login', data.error || data.mensaje || 'Credenciales incorrectas.', 'error');
-        }
-        return;
-      }
-
-      // ── Login exitoso
-      const usuario = data.usuario;
-      localStorage.setItem('dl_token',   data.token);
-      localStorage.setItem('dl_usuario', JSON.stringify(usuario));
-
-      // Admin: mostrar selector de empresas
-      if (usuario.es_admin) {
-        await cargarEmpresas(data.token, usuario);
-      } else {
-        // Usuario normal: redirigir directo a su empresa
-        await redirigirEmpresa(data.token, usuario);
-      }
-
-    } catch (e) {
-      mostrarAlerta('error-login', 'Error de conexión. Intenta de nuevo.', 'error');
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Entrar';
-    }
-  }
-
-  /* ════════════════════════════════════
-     REGISTRO
-  ════════════════════════════════════ */
-  async function hacerRegistro() {
-    const nombre = document.getElementById('reg-nombre').value.trim();
-    const email  = document.getElementById('reg-email').value.trim();
-    const pass   = document.getElementById('reg-pass').value;
-
-    if (!nombre || !email || !pass) { mostrarAlerta('error-registro', 'Completa todos los campos.', 'error'); return; }
-    if (pass.length < 8) { mostrarAlerta('error-registro', 'La contraseña debe tener al menos 8 caracteres.', 'error'); return; }
-
-    const btn = document.getElementById('btn-registro');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>Registrando...';
-
-    try {
-      const res  = await fetch(`${API}/auth/registro`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre, email, password: pass })
-      });
-      const data = await res.json();
-
-      if (!data.exito) {
-        mostrarAlerta('error-registro', data.error || data.mensaje || 'Error al registrar.', 'error');
-        return;
-      }
-
-      // Registro exitoso → mostrar pantalla de verificación
+function handleLogin() {
+  var email = document.getElementById('login-email').value.trim();
+  var password = document.getElementById('login-password').value;
+  if (!email || !password) { mostrarMensaje('mensaje-auth', 'error', 'Completa todos los campos.'); return; }
+  setBtnCargando('btn-login', true);
+  limpiarMensaje('mensaje-auth');
+  fetch(API + '/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, password: password }) })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.exito) {
+      localStorage.setItem('datalago_token', data.token);
+      localStorage.setItem('datalogo_usuario', JSON.stringify(data.usuario));
+      usuarioActual = data.usuario;
+      mostrarEmpresasOCargar(data.token);
+    } else if (data.requiere_verificacion) {
+      document.getElementById('email-verificacion').textContent = email;
       mostrarPantalla('verificacion');
-      document.getElementById('msg-verificacion').textContent =
-        `Te enviamos un correo a ${email}. Haz clic en el enlace para activar tu cuenta y poder iniciar sesión.`;
-
-    } catch (e) {
-      mostrarAlerta('error-registro', 'Error de conexión. Intenta de nuevo.', 'error');
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Crear cuenta';
-    }
-  }
-
-  /* ════════════════════════════════════
-     EMPRESAS (ADMIN)
-  ════════════════════════════════════ */
-  async function cargarEmpresas(token, usuario) {
-    try {
-      const res  = await fetch(`${API}/auth/empresa`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ token })
-      });
-      const data = await res.json();
-
-      if (!data.exito) {
-        mostrarAlerta('error-login', 'No se pudieron cargar las empresas.', 'error');
-        return;
-      }
-
-      // ── CORRECCIÓN CRÍTICA: empresas llega como objeto {}, no como array []
-      const empresasObj = data.empresas || {};
-      const empresasArr = Object.keys(empresasObj).map(key => ({
-        id:     key,
-        nombre: empresasObj[key].nombre || key,
-        url:    empresasObj[key].url    || '#'
-      }));
-
-      renderizarEmpresas(usuario, empresasArr);
-
-    } catch (e) {
-      mostrarAlerta('error-login', 'Error de conexión al cargar empresas.', 'error');
-    }
-  }
-
-  /* Iconos según el tipo de empresa */
-  function iconoEmpresa(id) {
-    const mapa = {
-      carnes:    '🥩',
-      plasticos: '🏭',
-      default:   '🏢'
-    };
-    return mapa[id] || mapa.default;
-  }
-
-  function renderizarEmpresas(usuario, empresas) {
-    document.getElementById('nombre-usuario').childNodes[0].textContent = (usuario.nombre || usuario.email) + ' ';
-    document.getElementById('badge-admin').style.display = 'inline-block';
-
-    const lista = document.getElementById('lista-empresas');
-    lista.innerHTML = '';
-
-    if (!empresas.length) {
-      lista.innerHTML = '<li style="font-size:.85rem;color:var(--gris-txt);text-align:center;padding:16px">Sin empresas asignadas.</li>';
     } else {
-      empresas.forEach(emp => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <a class="empresa-card" href="${emp.url}" target="_blank" rel="noopener">
-            <div class="empresa-icono">${iconoEmpresa(emp.id)}</div>
-            <div class="empresa-info">
-              <div class="empresa-nombre">${emp.nombre}</div>
-              <div class="empresa-url">${emp.url}</div>
-            </div>
-            <span class="empresa-flecha">→</span>
-          </a>`;
-        lista.appendChild(li);
-      });
+      mostrarMensaje('mensaje-auth', 'error', data.error || 'Error al iniciar sesion.');
     }
+  })
+  .catch(function() { mostrarMensaje('mensaje-auth', 'error', 'Error de conexion. Intenta nuevamente.'); })
+  .finally(function() { setBtnCargando('btn-login', false); });
+}
 
+function handleRegistro() {
+  var nombre = document.getElementById('registro-nombre').value.trim();
+  var email = document.getElementById('registro-email').value.trim();
+  var password = document.getElementById('registro-password').value;
+  if (!nombre || !email || !password) { mostrarMensaje('mensaje-auth', 'error', 'Completa todos los campos.'); return; }
+  if (password.length < 6) { mostrarMensaje('mensaje-auth', 'error', 'La contrasena debe tener al menos 6 caracteres.'); return; }
+  setBtnCargando('btn-registro', true);
+  limpiarMensaje('mensaje-auth');
+  fetch(API + '/auth/registro', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nombre: nombre, email: email, password: password }) })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.exito && data.requiere_verificacion) {
+      document.getElementById('email-verificacion').textContent = email;
+      mostrarPantalla('verificacion');
+    } else if (data.exito) {
+      mostrarMensaje('mensaje-auth', 'exito', 'Cuenta creada. Ya puedes iniciar sesion.');
+      cambiarTab('login');
+    } else {
+      mostrarMensaje('mensaje-auth', 'error', data.error || 'Error al registrar.');
+    }
+  })
+  .catch(function() { mostrarMensaje('mensaje-auth', 'error', 'Error de conexion. Intenta nuevamente.'); })
+  .finally(function() { setBtnCargando('btn-registro', false); });
+}
+
+function mostrarEmpresasOCargar(token) {
+  fetch(API + '/auth/empresa', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: token }) })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (!data.exito) { handleLogout(); return; }
     mostrarPantalla('empresas');
-  }
-
-  /* ════════════════════════════════════
-     REDIRECCIÓN USUARIO NORMAL
-  ════════════════════════════════════ */
-  async function redirigirEmpresa(token, usuario) {
-    try {
-      const res  = await fetch(`${API}/auth/empresa`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ token })
-      });
-      const data = await res.json();
-
-      if (data.exito && data.url) {
-        window.location.href = data.url;
-        return;
-      }
-
-      // Fallback si la respuesta usa la misma estructura que admin
-      const empresasObj = data.empresas || {};
-      const keys = Object.keys(empresasObj);
-      if (keys.length > 0) {
-        window.location.href = empresasObj[keys[0]].url;
-        return;
-      }
-
-      mostrarAlerta('error-login', 'No tienes empresa asignada. Contacta al administrador.', 'error');
-    } catch (e) {
-      mostrarAlerta('error-login', 'Error al obtener empresa. Intenta de nuevo.', 'error');
-    }
-  }
-
-  /* ════════════════════════════════════
-     LOGOUT
-  ════════════════════════════════════ */
-  function cerrarSesion() {
-    localStorage.removeItem('dl_token');
-    localStorage.removeItem('dl_usuario');
-    volverALogin();
-  }
-
-  /* ════════════════════════════════════
-     ENTER en inputs
-  ════════════════════════════════════ */
-  document.addEventListener('DOMContentLoaded', () => {
-    ['login-email','login-pass'].forEach(id => {
-      document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') hacerLogin(); });
-    });
-    ['reg-nombre','reg-email','reg-pass'].forEach(id => {
-      document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') hacerRegistro(); });
-    });
-
-    // ── Si ya hay sesión guardada, intentar restaurar
-    const token   = localStorage.getItem('dl_token');
-    const usuStr  = localStorage.getItem('dl_usuario');
-    if (token && usuStr) {
-      try {
-        const usuario = JSON.parse(usuStr);
-        if (usuario.es_admin) {
-          cargarEmpresas(token, usuario);
-        } else {
-          redirigirEmpresa(token, usuario);
+    if (data.es_admin) {
+      var arr = [];
+      if (Array.isArray(data.empresas)) {
+        arr = data.empresas;
+      } else if (data.empresas && typeof data.empresas === 'object') {
+        var keys = Object.keys(data.empresas);
+        for (var i = 0; i < keys.length; i++) {
+          var id = keys[i];
+          var emp = data.empresas[id];
+          if (emp && emp.url) arr.push({ id: id, nombre: emp.nombre, url: emp.url });
         }
-      } catch { /* sesión corrupta, ignora */ }
+      }
+      renderizarEmpresas(arr);
+    } else {
+      if (data.empresa && data.empresa.url) {
+        window.location.href = data.empresa.url;
+      } else {
+        renderizarEmpresas([]);
+      }
     }
-  });
-</script>
+  })
+  .catch(function() { mostrarMensaje('mensaje-auth', 'error', 'Error al cargar empresas.'); });
+}
 
+function renderizarEmpresas(empresas) {
+  var nombre = usuarioActual ? usuarioActual.nombre : 'Usuario';
+  var email = usuarioActual ? usuarioActual.email : '';
+  document.getElementById('avatar-inicial').textContent = nombre.charAt(0).toUpperCase();
+  document.getElementById('saludo-nombre').textContent = 'Hola, ' + nombre.split(' ')[0];
+  document.getElementById('saludo-email').textContent = email;
+  var grid = document.getElementById('empresas-grid');
+  if (!empresas.length) {
+    var m = document.getElementById('mensaje-empresas');
+    m.className = 'mensaje info'; m.textContent = 'Sin empresa asignada. Contacta al administrador.'; m.style.display = 'block';
+    grid.innerHTML = ''; return;
+  }
+  var iconos = { carnes: { emoji: 'carne', color: '#FEF2F2', borde: '#FECACA' }, plasticos: { emoji: 'fabrica', color: '#EFF6FF', borde: '#BFDBFE' } };
+  var nombres = { carnes: 'Carnes y Culinarios Selectos', plasticos: 'Plasticos del Norte S.A. de C.V.' };
+  var giros = { carnes: 'Distribucion y comercializacion de carnes', plasticos: 'Manufactura de productos plasticos' };
+  var html = '';
+  for (var i = 0; i < empresas.length; i++) {
+    var e = empresas[i];
+    var ic = iconos[e.id] || { emoji: 'empresa', color: '#F8FAFC', borde: '#E2E8F0' };
+    html += '<button class="empresa-card" onclick="window.location.href=\'' + e.url + '\'">';
+    html += '<div class="empresa-icono" style="background:' + ic.color + ';border:1.5px solid ' + ic.borde + '">' + ic.emoji + '</div>';
+    html += '<div class="empresa-info"><div class="empresa-nombre">' + (nombres[e.id] || e.nombre) + '</div><div class="empresa-giro">' + (giros[e.id] || '') + '</div></div>';
+    html += '<div class="empresa-arrow">-></div></button>';
+  }
+  grid.innerHTML = html;
+}
+
+function handleLogout() {
+  localStorage.removeItem('datalago_token'); localStorage.removeItem('datalogo_usuario'); usuarioActual = null;
+  mostrarPantalla('auth'); limpiarMensaje('mensaje-auth');
+}
+
+function volverLogin() { mostrarPantalla('auth'); cambiarTab('login'); }
+
+function mostrarPantalla(p) {
+  document.getElementById('pantalla-auth').style.display = p === 'auth' ? 'block' : 'none';
+  document.getElementById('pantalla-verificacion').style.display = p === 'verificacion' ? 'block' : 'none';
+  document.getElementById('pantalla-empresas').style.display = p === 'empresas' ? 'block' : 'none';
+}
+
+function mostrarMensaje(id, tipo, texto) {
+  var el = document.getElementById(id); el.className = 'mensaje ' + tipo; el.textContent = texto; el.style.display = 'block';
+}
+
+function limpiarMensaje(id) { var el = document.getElementById(id); el.style.display = 'none'; el.className = 'mensaje'; }
+
+function setBtnCargando(id, c) {
+  var b = document.getElementById(id);
+  if (c) { b.classList.add('cargando'); b.disabled = true; } else { b.classList.remove('cargando'); b.disabled = false; }
+}
+</script>
 </body>
 </html>
