@@ -6,13 +6,10 @@
   <title>Datálogo — Portal de Acceso</title>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --azul: #0F4C75; --azul-medio: #3282B8; --teal: #00C9A7;
-      --gris-claro: #F4F8FC; --gris-texto: #64748B; --error: #EF4444;
-    }
+    :root { --azul:#0F4C75; --azul-medio:#3282B8; --teal:#00C9A7; --gris-claro:#F4F8FC; --gris-texto:#64748B; --error:#EF4444; }
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family:'Sora',sans-serif; background:var(--azul); min-height:100vh; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative; }
-    body::before { content:''; position:fixed; inset:0; background:radial-gradient(ellipse at 20% 50%, rgba(50,130,184,0.3) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(0,201,167,0.15) 0%, transparent 50%); pointer-events:none; }
+    body::before { content:''; position:fixed; inset:0; background:radial-gradient(ellipse at 20% 50%,rgba(50,130,184,0.3) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(0,201,167,0.15) 0%,transparent 50%); pointer-events:none; }
     body::after { content:''; position:fixed; inset:0; background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px); background-size:60px 60px; pointer-events:none; }
     .container { position:relative; z-index:10; width:100%; max-width:440px; padding:20px; }
     .logo-area { text-align:center; margin-bottom:36px; animation:fadeDown 0.6s ease both; }
@@ -22,8 +19,6 @@
     .logo-nombre span { color:var(--teal); }
     .logo-tagline { font-size:12px; color:rgba(255,255,255,0.5); font-weight:300; margin-top:4px; }
     .card { background:rgba(255,255,255,0.97); border-radius:20px; padding:40px; box-shadow:0 25px 60px rgba(0,0,0,0.3); animation:fadeUp 0.6s ease 0.1s both; }
-    .card-titulo { font-size:20px; font-weight:600; color:var(--azul); margin-bottom:6px; }
-    .card-subtitulo { font-size:13px; color:var(--gris-texto); margin-bottom:28px; line-height:1.5; }
     .tabs { display:flex; background:var(--gris-claro); border-radius:10px; padding:4px; margin-bottom:28px; gap:4px; }
     .tab { flex:1; padding:9px; border:none; background:transparent; border-radius:8px; font-family:'Sora',sans-serif; font-size:13px; font-weight:500; color:var(--gris-texto); cursor:pointer; transition:all 0.2s; }
     .tab.activo { background:white; color:var(--azul); box-shadow:0 2px 8px rgba(0,0,0,0.1); }
@@ -39,13 +34,12 @@
     .btn-primary.cargando .btn-text { display:none; }
     .btn-primary.cargando .spinner { display:block; }
     .mensaje { padding:12px 16px; border-radius:10px; font-size:13px; margin-bottom:16px; display:none; line-height:1.5; }
-    .mensaje.error   { background:#FEF2F2; color:#991B1B; border:1px solid #FECACA; display:block; }
-    .mensaje.exito   { background:#F0FDF4; color:#166534; border:1px solid #BBF7D0; display:block; }
-    .mensaje.info    { background:#EFF6FF; color:#1E40AF; border:1px solid #BFDBFE; display:block; }
-    .icono-pantalla { width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; font-size:28px; }
+    .mensaje.error { background:#FEF2F2; color:#991B1B; border:1px solid #FECACA; display:block; }
+    .mensaje.exito { background:#F0FDF4; color:#166534; border:1px solid #BBF7D0; display:block; }
     .pantalla-centro { text-align:center; padding:10px 0; }
+    .icono-pantalla { width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; font-size:28px; }
     .pantalla-titulo { font-size:18px; font-weight:600; color:var(--azul); margin-bottom:10px; }
-    .pantalla-texto  { font-size:13px; color:var(--gris-texto); line-height:1.6; margin-bottom:24px; }
+    .pantalla-texto { font-size:13px; color:var(--gris-texto); line-height:1.6; margin-bottom:24px; }
     .highlight { font-weight:600; color:var(--azul); }
     .btn-secundario { background:none; border:1.5px solid var(--azul); color:var(--azul); padding:10px 24px; border-radius:8px; font-family:'Sora',sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.2s; }
     .btn-secundario:hover { background:var(--azul); color:white; }
@@ -53,77 +47,113 @@
     .empresa-card { display:flex; align-items:center; gap:16px; padding:16px 20px; border:1.5px solid #E2E8F0; border-radius:12px; cursor:pointer; transition:all 0.2s; background:white; text-align:left; width:100%; font-family:'Sora',sans-serif; }
     .empresa-card:hover { border-color:var(--azul-medio); box-shadow:0 4px 16px rgba(15,76,117,0.12); transform:translateY(-2px); }
     .empresa-icono { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
-    .empresa-info { flex:1; }
     .empresa-nombre { font-size:14px; font-weight:600; color:#1E293B; margin-bottom:2px; }
-    .empresa-giro   { font-size:12px; color:var(--gris-texto); }
-    .empresa-arrow  { color:#CBD5E1; font-size:18px; transition:all 0.2s; }
+    .empresa-giro { font-size:12px; color:var(--gris-texto); }
+    .empresa-arrow { color:#CBD5E1; font-size:18px; transition:all 0.2s; }
     .empresa-card:hover .empresa-arrow { color:var(--azul); transform:translateX(4px); }
     .saludo-usuario { display:flex; align-items:center; gap:10px; padding:12px 16px; background:var(--gris-claro); border-radius:10px; margin-bottom:24px; }
     .avatar { width:36px; height:36px; background:linear-gradient(135deg,var(--azul),var(--azul-medio)); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:600; font-size:14px; flex-shrink:0; }
     .saludo-texto { flex:1; }
     .saludo-nombre { font-size:13px; font-weight:600; color:var(--azul); }
-    .saludo-email  { font-size:11px; color:var(--gris-texto); }
+    .saludo-email { font-size:11px; color:var(--gris-texto); }
     .btn-logout { background:none; border:none; color:var(--gris-texto); cursor:pointer; font-size:11px; font-family:'Sora',sans-serif; padding:4px 8px; border-radius:6px; transition:all 0.2s; }
     .btn-logout:hover { background:#FEF2F2; color:var(--error); }
     .footer-portal { text-align:center; margin-top:20px; font-size:11px; color:rgba(255,255,255,0.35); animation:fadeDown 0.6s ease 0.3s both; }
     .fade-in { animation:fadeUp 0.3s ease both; }
     @keyframes fadeDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes fadeUp   { from{opacity:0;transform:translateY(20px)}  to{opacity:1;transform:translateY(0)} }
-    @keyframes spin     { to{transform:rotate(360deg)} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes spin { to{transform:rotate(360deg)} }
+
+    /* PANEL ADMIN */
+    .admin-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:1000; align-items:flex-start; justify-content:center; padding-top:40px; }
+    .admin-overlay.visible { display:flex; }
+    .admin-box { background:white; border-radius:16px; width:92%; max-width:700px; max-height:80vh; display:flex; flex-direction:column; box-shadow:0 25px 60px rgba(0,0,0,0.35); overflow:hidden; }
+    .admin-head { background:var(--azul); color:white; padding:18px 24px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+    .admin-head h2 { font-size:15px; font-weight:600; letter-spacing:0.2px; }
+    .admin-head-close { background:none; border:none; color:rgba(255,255,255,0.7); font-size:22px; cursor:pointer; line-height:1; }
+    .admin-head-close:hover { color:white; }
+    .admin-tabs { display:flex; border-bottom:1px solid #E2E8F0; flex-shrink:0; background:white; }
+    .admin-tab { flex:1; padding:12px 8px; border:none; background:transparent; font-family:'Sora',sans-serif; font-size:12px; font-weight:500; color:var(--gris-texto); cursor:pointer; border-bottom:2px solid transparent; transition:all 0.2s; }
+    .admin-tab.activo { color:var(--azul); border-bottom-color:var(--azul); font-weight:600; }
+    .admin-body { flex:1; overflow-y:auto; padding:16px 20px; }
+    .admin-body::-webkit-scrollbar { width:4px; }
+    .admin-body::-webkit-scrollbar-thumb { background:#E2E8F0; border-radius:2px; }
+    .user-card { border:1px solid #E2E8F0; border-radius:10px; padding:12px 14px; margin-bottom:8px; }
+    .user-card-top { display:flex; align-items:center; gap:10px; }
+    .user-avatar { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,var(--azul),var(--azul-medio)); color:white; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:13px; flex-shrink:0; }
+    .user-info { flex:1; }
+    .user-nombre { font-size:13px; font-weight:600; color:#1E293B; }
+    .user-meta { font-size:11px; color:var(--gris-texto); margin-top:2px; display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+    .badge { font-size:10px; font-weight:600; padding:2px 8px; border-radius:10px; }
+    .badge-area { background:#EFF6FF; color:#1E40AF; }
+    .badge-empresa { background:#F0FDF4; color:#166534; }
+    .badge-pendiente { background:#FFFBEB; color:#92400E; }
+    .badge-inactivo { background:#FEF2F2; color:#991B1B; }
+    .user-actions { display:flex; gap:6px; flex-shrink:0; }
+    .user-card-bottom { margin-top:10px; padding-top:10px; border-top:1px solid #F1F5F9; display:flex; gap:8px; flex-wrap:wrap; }
+    .btn-sm { padding:5px 12px; border-radius:6px; font-family:'Sora',sans-serif; font-size:11px; font-weight:600; cursor:pointer; transition:all 0.2s; border:none; }
+    .btn-aprobar { background:#0F4C75; color:white; }
+    .btn-aprobar:hover { background:#1565C0; }
+    .btn-rechazar { background:#FEF2F2; color:#991B1B; border:1px solid #FECACA !important; }
+    .btn-rechazar:hover { background:#FEE2E2; }
+    .btn-cambiar-pass { background:#F4F8FC; color:var(--azul); border:1px solid #E2E8F0 !important; }
+    .btn-cambiar-pass:hover { background:#E2E8F0; }
+    .select-sm { border:1px solid #E2E8F0; border-radius:6px; font-family:'Sora',sans-serif; font-size:11px; padding:5px 8px; color:#1E293B; cursor:pointer; background:white; }
+    .admin-empty { text-align:center; padding:40px 20px; color:var(--gris-texto); font-size:13px; }
+    .admin-empty-icon { font-size:32px; margin-bottom:12px; }
+    .admin-float { position:fixed; bottom:24px; right:24px; background:var(--azul); color:white; border:none; border-radius:50%; width:50px; height:50px; font-size:20px; cursor:pointer; box-shadow:0 4px 16px rgba(15,76,117,0.4); display:none; align-items:center; justify-content:center; z-index:100; transition:all 0.2s; }
+    .admin-float:hover { transform:scale(1.1); background:var(--azul-medio); }
+    .notif-badge { position:absolute; top:-4px; right:-4px; background:#EF4444; color:white; font-size:9px; font-weight:700; padding:2px 5px; border-radius:10px; display:none; }
+
+    /* Modal cambiar contraseña */
+    .modal-pass { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1100; align-items:center; justify-content:center; }
+    .modal-pass.visible { display:flex; }
+    .modal-pass-box { background:white; border-radius:14px; padding:28px; width:90%; max-width:380px; box-shadow:0 20px 50px rgba(0,0,0,0.3); }
+    .modal-pass-title { font-size:16px; font-weight:600; color:var(--azul); margin-bottom:4px; }
+    .modal-pass-sub { font-size:12px; color:var(--gris-texto); margin-bottom:20px; }
+    .modal-pass-actions { display:flex; gap:8px; margin-top:16px; }
+    .modal-pass-actions .btn-primary { margin-top:0; }
+
     @media(max-width:480px) { .card{padding:28px 24px} .container{padding:16px} }
   </style>
 </head>
 <body>
 <div class="container">
   <div class="logo-area">
-    <div class="logo-mark">
-      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
-    </div>
+    <div class="logo-mark"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg></div>
     <div class="logo-nombre">Dat<span>á</span>logo</div>
     <div class="logo-tagline">Datos que responden. Sistemas que actúan.</div>
   </div>
 
   <div class="card" id="card-main">
-
-    <!-- PANTALLA: Auth (login / registro) -->
+    <!-- AUTH -->
     <div id="pantalla-auth">
       <div class="tabs">
-        <button class="tab activo" onclick="cambiarTab('login')"    id="tab-login">Iniciar sesión</button>
-        <button class="tab"        onclick="cambiarTab('registro')" id="tab-registro">Registrarse</button>
+        <button class="tab activo" onclick="cambiarTab('login')" id="tab-login">Iniciar sesión</button>
+        <button class="tab" onclick="cambiarTab('registro')" id="tab-registro">Registrarse</button>
       </div>
       <div id="mensaje-auth" class="mensaje"></div>
-
-      <!-- Login -->
       <div id="form-login">
-        <div class="form-group">
-          <label class="form-label">Correo electrónico</label>
-          <input type="email" class="form-input" id="login-email" placeholder="tu@correo.com"
-            onkeypress="if(event.key==='Enter')handleLogin()">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Contraseña</label>
-          <input type="password" class="form-input" id="login-password" placeholder="••••••••"
-            onkeypress="if(event.key==='Enter')handleLogin()">
-        </div>
+        <div class="form-group"><label class="form-label">Correo electrónico</label>
+          <input type="email" class="form-input" id="login-email" placeholder="tu@correo.com" onkeypress="if(event.key==='Enter')handleLogin()"></div>
+        <div class="form-group"><label class="form-label">Contraseña</label>
+          <input type="text" style="-webkit-text-security:disc" class="form-input" id="login-password" placeholder="••••••••" onkeypress="if(event.key==='Enter')handleLogin()"></div>
         <button class="btn-primary" id="btn-login" onclick="handleLogin()">
-          <span class="btn-text">Entrar al portal</span>
-          <div class="spinner"></div>
-        </button>
+          <span class="btn-text">Entrar al portal</span><div class="spinner"></div></button>
       </div>
-
-      <!-- Registro -->
       <div id="form-registro" style="display:none">
-        <div class="form-group">
-          <label class="form-label">Nombre completo</label>
-          <input type="text" class="form-input" id="registro-nombre" placeholder="Juan Pérez">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Correo electrónico</label>
-          <input type="email" class="form-input" id="registro-email" placeholder="tu@empresa.com">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Área</label>
-          <select class="form-input" id="registro-area">
+        <div class="form-group"><label class="form-label">Nombre completo</label>
+          <input type="text" class="form-input" id="reg-nombre" placeholder="Juan Pérez"></div>
+        <div class="form-group"><label class="form-label">Correo electrónico</label>
+          <input type="email" class="form-input" id="reg-email" placeholder="tu@empresa.com"></div>
+        <div class="form-group"><label class="form-label">Empresa</label>
+          <select class="form-input" id="reg-empresa">
+            <option value="">Selecciona tu empresa...</option>
+            <option value="plasticos">Plásticos del Norte S.A. de C.V.</option>
+            <option value="carnes">Carnes y Culinarios Selectos</option>
+          </select></div>
+        <div class="form-group"><label class="form-label">Área</label>
+          <select class="form-input" id="reg-area">
             <option value="">Selecciona tu área...</option>
             <option value="ventas">Ventas y Comercial</option>
             <option value="atencion">Atención al Cliente</option>
@@ -136,95 +166,115 @@
             <option value="documental">Gestión Documental</option>
             <option value="produccion">Producción y Manufactura</option>
             <option value="direccion">Dirección y Estrategia</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Contraseña</label>
-          <input type="password" class="form-input" id="registro-password" placeholder="Mínimo 6 caracteres">
-        </div>
+          </select></div>
+        <div class="form-group"><label class="form-label">Contraseña</label>
+          <input type="text" style="-webkit-text-security:disc" class="form-input" id="reg-password" placeholder="Mínimo 6 caracteres"></div>
         <button class="btn-primary" id="btn-registro" onclick="handleRegistro()">
-          <span class="btn-text">Crear cuenta</span>
-          <div class="spinner"></div>
-        </button>
+          <span class="btn-text">Crear cuenta</span><div class="spinner"></div></button>
       </div>
     </div>
 
-    <!-- PANTALLA: Verificación de correo -->
+    <!-- VERIFICACION -->
     <div id="pantalla-verificacion" style="display:none">
       <div class="pantalla-centro fade-in">
         <div class="icono-pantalla" style="background:linear-gradient(135deg,#EFF6FF,#BFDBFE)">📧</div>
         <div class="pantalla-titulo">Verifica tu correo</div>
-        <p class="pantalla-texto">
-          Enviamos un enlace de activación a<br>
-          <span class="highlight" id="email-verificacion"></span><br><br>
-          Revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.
-        </p>
+        <p class="pantalla-texto">Enviamos un enlace de activación a<br><span class="highlight" id="email-verif"></span><br><br>Revisa tu bandeja de entrada y haz clic en el enlace.</p>
         <button class="btn-secundario" onclick="mostrarPantalla('auth')">Volver al inicio</button>
       </div>
     </div>
 
-    <!-- PANTALLA: Pendiente de aprobación -->
+    <!-- PENDIENTE -->
     <div id="pantalla-pendiente" style="display:none">
       <div class="pantalla-centro fade-in">
         <div class="icono-pantalla" style="background:linear-gradient(135deg,#FFFBEB,#FDE68A)">⏳</div>
         <div class="pantalla-titulo">Pendiente de aprobación</div>
-        <p class="pantalla-texto">
-          Tu correo fue verificado correctamente.<br><br>
-          Un administrador revisará tu solicitud y recibirás un correo cuando tu cuenta sea aprobada.
-        </p>
+        <p class="pantalla-texto">Tu correo fue verificado.<br><br>Un administrador aprobará tu acceso pronto. Recibirás un correo cuando esté listo.</p>
         <button class="btn-secundario" onclick="mostrarPantalla('auth')">Volver al inicio</button>
       </div>
     </div>
 
-    <!-- PANTALLA: Selección de empresa -->
+    <!-- EMPRESAS -->
     <div id="pantalla-empresas" style="display:none">
       <div class="fade-in">
         <div class="saludo-usuario">
           <div class="avatar" id="avatar-inicial"></div>
           <div class="saludo-texto">
             <div class="saludo-nombre" id="saludo-nombre"></div>
-            <div class="saludo-email"  id="saludo-email"></div>
+            <div class="saludo-email" id="saludo-email"></div>
           </div>
           <button class="btn-logout" onclick="handleLogout()">Salir</button>
         </div>
-        <div class="card-titulo">Selecciona tu empresa</div>
-        <p class="card-subtitulo">Elige el sistema al que deseas acceder.</p>
+        <div style="font-size:20px;font-weight:600;color:var(--azul);margin-bottom:6px">Selecciona tu empresa</div>
+        <p style="font-size:13px;color:var(--gris-texto);margin-bottom:20px">Elige el sistema al que deseas acceder.</p>
         <div id="mensaje-empresas" class="mensaje"></div>
         <div class="empresas-grid" id="empresas-grid"></div>
       </div>
     </div>
-
   </div>
   <div class="footer-portal">© 2026 Datálogo — Todos los derechos reservados</div>
 </div>
 
-<script>
-var API          = 'https://api.datalogo.lat';
-var usuarioActual = null;
+<!-- BOTÓN FLOTANTE ADMIN -->
+<button class="admin-float" id="adminFloat" onclick="abrirAdmin()" title="Panel de administración" style="position:relative">
+  ⚙️
+  <span class="notif-badge" id="notif-badge">0</span>
+</button>
 
-// Mapa área → agentes permitidos en el frontend PDN
+<!-- PANEL ADMIN -->
+<div class="admin-overlay" id="adminOverlay">
+  <div class="admin-box">
+    <div class="admin-head">
+      <h2>⚙️ Panel de Administración — Datálogo</h2>
+      <button class="admin-head-close" onclick="cerrarAdmin()">×</button>
+    </div>
+    <div class="admin-tabs">
+      <button class="admin-tab activo" id="atab-pendientes" onclick="adminTab('pendientes')">
+        Pendientes de aprobación
+      </button>
+      <button class="admin-tab" id="atab-usuarios" onclick="adminTab('usuarios')">Usuarios activos</button>
+    </div>
+    <div class="admin-body" id="admin-body">
+      <div class="admin-empty"><div class="admin-empty-icon">⏳</div>Cargando...</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CAMBIAR CONTRASEÑA -->
+<div class="modal-pass" id="modalPass">
+  <div class="modal-pass-box">
+    <div class="modal-pass-title">Cambiar contraseña</div>
+    <div class="modal-pass-sub" id="modal-pass-email">usuario@empresa.com</div>
+    <div id="mensaje-pass" class="mensaje"></div>
+    <div class="form-group"><label class="form-label">Nueva contraseña</label>
+      <input type="text" style="-webkit-text-security:disc" class="form-input" id="nueva-pass" placeholder="Mínimo 6 caracteres"></div>
+    <div class="modal-pass-actions">
+      <button class="btn-primary" style="flex:1" onclick="confirmarCambioPass()">
+        <span class="btn-text">Guardar</span><div class="spinner"></div></button>
+      <button class="btn-secundario" onclick="cerrarModalPass()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var API = 'https://api.datalogo.lat';
+var usuarioActual = null;
+var emailCambioPass = null;
+var adminTabActual = 'pendientes';
+
 var AREA_AGENTES = {
-  orquestador: ['orquestador','ventas','atencion','inventario','calidad','finanzas','rh','compras','marketing','documental','produccion','direccion'],
-  ventas:      ['ventas','atencion'],
-  atencion:    ['atencion'],
-  inventario:  ['inventario','calidad'],
-  calidad:     ['calidad'],
-  finanzas:    ['finanzas'],
-  rh:          ['rh'],
-  compras:     ['compras','inventario'],
-  marketing:   ['marketing','ventas'],
-  documental:  ['documental'],
-  produccion:  ['produccion','calidad','inventario'],
-  direccion:   ['direccion','orquestador','ventas','finanzas','produccion'],
-  admin:       ['orquestador','ventas','atencion','inventario','calidad','finanzas','rh','compras','marketing','documental','produccion','direccion'],
+  ventas:['ventas','atencion'], atencion:['atencion'], inventario:['inventario','calidad'],
+  calidad:['calidad'], finanzas:['finanzas'], rh:['rh'], compras:['compras','inventario'],
+  marketing:['marketing','ventas'], documental:['documental'], produccion:['produccion','calidad','inventario'],
+  direccion:['direccion','orquestador','ventas','finanzas','produccion','superchat'],
+  admin:['superchat','orquestador','ventas','atencion','inventario','calidad','finanzas','rh','compras','marketing','documental','produccion','direccion']
 };
 
 window.onload = function() {
-  var token   = localStorage.getItem('datalogo_token');
+  var token = localStorage.getItem('datalogo_token');
   var usuario = localStorage.getItem('datalogo_usuario');
   if (token && usuario) {
-    try { usuarioActual = JSON.parse(usuario); cargarEmpresas(token); }
-    catch(e) { localStorage.clear(); }
+    try { usuarioActual = JSON.parse(usuario); cargarEmpresas(token); } catch(e) { localStorage.clear(); }
   }
 };
 
@@ -237,166 +287,288 @@ function mostrarPantalla(id) {
 
 function cambiarTab(tab) {
   limpiarMensaje('mensaje-auth');
-  if (tab === 'login') {
-    document.getElementById('form-login').style.display = 'block';
-    document.getElementById('form-registro').style.display = 'none';
-    document.getElementById('tab-login').classList.add('activo');
-    document.getElementById('tab-registro').classList.remove('activo');
-  } else {
-    document.getElementById('form-login').style.display = 'none';
-    document.getElementById('form-registro').style.display = 'block';
-    document.getElementById('tab-login').classList.remove('activo');
-    document.getElementById('tab-registro').classList.add('activo');
-  }
+  document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('form-registro').style.display = tab === 'registro' ? 'block' : 'none';
+  document.getElementById('tab-login').classList.toggle('activo', tab === 'login');
+  document.getElementById('tab-registro').classList.toggle('activo', tab === 'registro');
 }
 
 function handleLogin() {
-  var email    = document.getElementById('login-email').value.trim();
-  var password = document.getElementById('login-password').value;
-  if (!email || !password) { mostrarMensaje('mensaje-auth','error','Completa todos los campos.'); return; }
+  var email = document.getElementById('login-email').value.trim();
+  var pass   = document.getElementById('login-password').value;
+  if (!email || !pass) { mostrarMensaje('mensaje-auth','error','Completa todos los campos.'); return; }
   setBtnCargando('btn-login', true);
   limpiarMensaje('mensaje-auth');
-
-  fetch(API + '/auth/login', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({email: email, password: password})
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
+  fetch(API + '/auth/login', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:email, password:pass})})
+  .then(function(r){return r.json();})
+  .then(function(data){
     setBtnCargando('btn-login', false);
     if (data.exito) {
-      localStorage.setItem('datalogo_token',   data.token);
+      localStorage.setItem('datalogo_token', data.token);
       localStorage.setItem('datalogo_usuario', JSON.stringify(data.usuario));
       usuarioActual = data.usuario;
       cargarEmpresas(data.token);
     } else if (data.pendiente_aprobacion) {
       mostrarPantalla('pendiente');
     } else if (data.requiere_verificacion) {
-      document.getElementById('email-verificacion').textContent = email;
+      document.getElementById('email-verif').textContent = email;
       mostrarPantalla('verificacion');
     } else {
-      mostrarMensaje('mensaje-auth', 'error', data.error || 'Error al iniciar sesión.');
+      mostrarMensaje('mensaje-auth','error', data.error || 'Error al iniciar sesión.');
     }
-  })
-  .catch(function() {
-    setBtnCargando('btn-login', false);
-    mostrarMensaje('mensaje-auth', 'error', 'No se pudo conectar con el servidor.');
-  });
+  }).catch(function(){ setBtnCargando('btn-login',false); mostrarMensaje('mensaje-auth','error','No se pudo conectar.'); });
 }
 
 function handleRegistro() {
-  var nombre   = document.getElementById('registro-nombre').value.trim();
-  var email    = document.getElementById('registro-email').value.trim();
-  var area     = document.getElementById('registro-area').value;
-  var password = document.getElementById('registro-password').value;
-
-  if (!nombre || !email || !area || !password) {
-    mostrarMensaje('mensaje-auth', 'error', 'Completa todos los campos incluyendo el área.');
-    return;
-  }
-  if (password.length < 6) {
-    mostrarMensaje('mensaje-auth', 'error', 'La contraseña debe tener al menos 6 caracteres.');
-    return;
-  }
-
+  var nombre  = document.getElementById('reg-nombre').value.trim();
+  var email   = document.getElementById('reg-email').value.trim();
+  var empresa = document.getElementById('reg-empresa').value;
+  var area    = document.getElementById('reg-area').value;
+  var pass    = document.getElementById('reg-password').value;
+  if (!nombre||!email||!empresa||!area||!pass) { mostrarMensaje('mensaje-auth','error','Completa todos los campos.'); return; }
+  if (pass.length < 6) { mostrarMensaje('mensaje-auth','error','La contraseña debe tener al menos 6 caracteres.'); return; }
   setBtnCargando('btn-registro', true);
   limpiarMensaje('mensaje-auth');
-
-  fetch(API + '/auth/registro', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({nombre: nombre, email: email, area: area, password: password})
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
+  fetch(API + '/auth/registro', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({nombre:nombre, email:email, area:area, empresa_solicitada:empresa, password:pass})})
+  .then(function(r){return r.json();})
+  .then(function(data){
     setBtnCargando('btn-registro', false);
     if (data.exito) {
-      document.getElementById('email-verificacion').textContent = email;
+      document.getElementById('email-verif').textContent = email;
       mostrarPantalla('verificacion');
     } else {
-      mostrarMensaje('mensaje-auth', 'error', data.error || 'Error al registrarse.');
+      mostrarMensaje('mensaje-auth','error', data.error||'Error al registrarse.');
     }
-  })
-  .catch(function() {
-    setBtnCargando('btn-registro', false);
-    mostrarMensaje('mensaje-auth', 'error', 'No se pudo conectar con el servidor.');
-  });
+  }).catch(function(){ setBtnCargando('btn-registro',false); mostrarMensaje('mensaje-auth','error','No se pudo conectar.'); });
 }
 
 function cargarEmpresas(token) {
-  fetch(API + '/auth/empresa', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({token: token})
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
+  fetch(API + '/auth/empresa', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({token:token})})
+  .then(function(r){return r.json();})
+  .then(function(data){
     if (data.exito) {
-      renderizarEmpresas(data.empresas);
-    } else {
-      localStorage.clear();
-      mostrarMensaje('mensaje-auth', 'error', 'Sesión expirada. Inicia sesión de nuevo.');
-    }
-  })
-  .catch(function() {
-    mostrarMensaje('mensaje-auth', 'error', 'Error al cargar las empresas.');
-  });
+      if (data.es_admin && data.empresas) renderizarEmpresas(data.empresas);
+      else if (data.empresa && data.detalle) { var e={}; e[data.empresa]=data.detalle; renderizarEmpresas(e); }
+      else renderizarEmpresas({});
+    } else { localStorage.clear(); mostrarMensaje('mensaje-auth','error','Sesión expirada.'); }
+  }).catch(function(){ mostrarMensaje('mensaje-auth','error','Error al cargar empresas.'); });
 }
 
 function renderizarEmpresas(empresas) {
   if (!usuarioActual) return;
-  document.getElementById('avatar-inicial').textContent  = usuarioActual.nombre.charAt(0).toUpperCase();
-  document.getElementById('saludo-nombre').textContent   = 'Hola, ' + usuarioActual.nombre.split(' ')[0];
-  document.getElementById('saludo-email').textContent    = usuarioActual.email;
-
+  document.getElementById('avatar-inicial').textContent = usuarioActual.nombre.charAt(0).toUpperCase();
+  document.getElementById('saludo-nombre').textContent  = 'Hola, ' + usuarioActual.nombre.split(' ')[0];
+  document.getElementById('saludo-email').textContent   = usuarioActual.email;
   var grid = document.getElementById('empresas-grid');
-  var keys = Object.keys(empresas || {});
-
-  if (!keys.length) {
-    grid.innerHTML = '<p style="color:var(--gris-texto);font-size:13px">No tienes empresas asignadas aún.</p>';
-    mostrarPantalla('empresas');
-    return;
-  }
-
-  grid.innerHTML = keys.map(function(key) {
+  var keys = Object.keys(empresas||{});
+  if (!keys.length) { grid.innerHTML = '<p style="color:var(--gris-texto);font-size:13px">No tienes empresas asignadas aún. Contacta al administrador.</p>'; mostrarPantalla('empresas'); return; }
+  grid.innerHTML = keys.map(function(key){
     var e = empresas[key];
-    return '<button class="empresa-card" onclick="abrirEmpresa(\'' + key + '\',\'' + e.url + '\')">'
-      + '<div class="empresa-icono" style="background:' + (e.color||'#EFF6FF') + '">' + (e.icono||'🏢') + '</div>'
-      + '<div class="empresa-info">'
-      + '<div class="empresa-nombre">' + e.nombre + '</div>'
-      + '<div class="empresa-giro">' + (e.giro||'Sistema de IA') + '</div>'
-      + '</div>'
-      + '<div class="empresa-arrow">›</div>'
-      + '</button>';
+    return '<button class="empresa-card" onclick="abrirEmpresa(\''+key+'\',\''+e.url+'\')">'+
+      '<div class="empresa-icono" style="background:'+(e.color||'#EFF6FF')+'">'+(e.icono||'🏢')+'</div>'+
+      '<div style="flex:1"><div class="empresa-nombre">'+(e.nombre||key)+'</div><div class="empresa-giro">'+(e.giro||'Sistema de IA')+'</div></div>'+
+      '<div class="empresa-arrow">›</div></button>';
   }).join('');
-
   mostrarPantalla('empresas');
+
+  // Mostrar botón admin
+  if (usuarioActual && usuarioActual.es_admin) {
+    var btn = document.getElementById('adminFloat');
+    btn.style.display = 'flex';
+    // Contar pendientes
+    var token = localStorage.getItem('datalogo_token');
+    fetch(API + '/auth/pendientes', {headers:{'Authorization':'Bearer '+token}})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if (d.total > 0) {
+        var badge = document.getElementById('notif-badge');
+        badge.style.display = 'block';
+        badge.textContent = d.total;
+      }
+    }).catch(function(){});
+  }
 }
 
 function abrirEmpresa(key, url) {
-  // Pasar área del usuario para que el frontend PDN filtre los agentes
-  var area  = usuarioActual?.area || 'ventas';
-  var esAdmin = usuarioActual?.es_admin || false;
-  var agentesPermitidos = esAdmin
-    ? AREA_AGENTES['admin']
-    : (AREA_AGENTES[area] || [area]);
-
-  var params = new URLSearchParams({
-    token:    localStorage.getItem('datalogo_token') || '',
-    nombre:   usuarioActual?.nombre || '',
-    area:     area,
-    agentes:  agentesPermitidos.join(',')
-  });
-
+  if (!url || url === 'null') { alert('Esta empresa no tiene URL configurada aún.'); return; }
+  var area  = usuarioActual&&usuarioActual.area ? usuarioActual.area : 'ventas';
+  var esAdmin = usuarioActual&&usuarioActual.es_admin;
+  var permitidos = esAdmin ? AREA_AGENTES['admin'] : (AREA_AGENTES[area]||[area]);
+  var params = new URLSearchParams({token:localStorage.getItem('datalogo_token')||'', nombre:usuarioActual&&usuarioActual.nombre||'', area:area, agentes:permitidos.join(',')});
   window.open(url + '?' + params.toString(), '_blank');
 }
 
 function handleLogout() {
-  localStorage.clear();
-  usuarioActual = null;
-  mostrarPantalla('auth');
-  cambiarTab('login');
+  localStorage.clear(); usuarioActual = null;
+  document.getElementById('adminFloat').style.display = 'none';
+  mostrarPantalla('auth'); cambiarTab('login');
+}
+
+// ── PANEL ADMIN ──
+function abrirAdmin() {
+  document.getElementById('adminOverlay').classList.add('visible');
+  adminTab('pendientes');
+}
+
+function cerrarAdmin() {
+  document.getElementById('adminOverlay').classList.remove('visible');
+}
+
+function adminTab(tab) {
+  adminTabActual = tab;
+  document.querySelectorAll('.admin-tab').forEach(function(t){ t.classList.remove('activo'); });
+  document.getElementById('atab-' + tab).classList.add('activo');
+  if (tab === 'pendientes') cargarPendientes();
+  else cargarUsuarios();
+}
+
+function cargarPendientes() {
+  var token = localStorage.getItem('datalogo_token');
+  document.getElementById('admin-body').innerHTML = '<div class="admin-empty"><div class="admin-empty-icon">⏳</div>Cargando...</div>';
+  fetch(API + '/auth/pendientes', {headers:{'Authorization':'Bearer '+token}})
+  .then(function(r){return r.json();})
+  .then(function(data){
+    var body = document.getElementById('admin-body');
+    var badge = document.getElementById('notif-badge');
+    if (!data.pendientes||!data.pendientes.length) {
+      body.innerHTML = '<div class="admin-empty"><div class="admin-empty-icon">✅</div>No hay usuarios pendientes de aprobación</div>';
+      badge.style.display = 'none';
+      return;
+    }
+    badge.style.display = 'block';
+    badge.textContent = data.total;
+    body.innerHTML = data.pendientes.map(function(u){
+      return '<div class="user-card">'+
+        '<div class="user-card-top">'+
+          '<div class="user-avatar">'+u.nombre.charAt(0).toUpperCase()+'</div>'+
+          '<div class="user-info">'+
+            '<div class="user-nombre">'+u.nombre+'</div>'+
+            '<div class="user-meta">'+u.email+
+              (u.area?'<span class="badge badge-area">'+u.area+'</span>':'')+
+              (!u.email_verificado?'<span class="badge badge-pendiente">Sin verificar correo</span>':'')+
+            '</div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="user-card-bottom">'+
+          '<select class="select-sm" id="empresa-'+u.email.replace('@','_').replace('.','_')+'">'+
+            '<option value="">Asignar empresa...</option>'+
+            '<option value="plasticos">Plásticos del Norte</option>'+
+            '<option value="carnes">Carnes y Culinarios</option>'+
+          '</select>'+
+          '<button class="btn-sm btn-aprobar" onclick="aprobarConEmpresa(\''+u.email+'\')">✅ Aprobar</button>'+
+          '<button class="btn-sm btn-rechazar" onclick="accionUsuario(\''+u.email+'\',\'rechazar\')">❌ Rechazar</button>'+
+        '</div>'+
+      '</div>';
+    }).join('');
+  }).catch(function(){ document.getElementById('admin-body').innerHTML = '<div class="admin-empty">Error al cargar</div>'; });
+}
+
+function aprobarConEmpresa(email) {
+  var idSafe = email.replace('@','_').replace('.','_');
+  var empresa = document.getElementById('empresa-'+idSafe) ? document.getElementById('empresa-'+idSafe).value : '';
+  var token = localStorage.getItem('datalogo_token');
+  // Aprobar primero
+  fetch(API + '/auth/aprobar-usuario', {method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+token}, body:JSON.stringify({email:email,accion:'aprobar'})})
+  .then(function(r){return r.json();})
+  .then(function(data){
+    if (data.exito && empresa) {
+      // Asignar empresa
+      return fetch(API + '/auth/asignar-empresa', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({token:token, email_usuario:email, empresa:empresa})});
+    }
+    return Promise.resolve();
+  })
+  .then(function(){ cargarPendientes(); })
+  .catch(function(){});
+}
+
+function accionUsuario(email, accion) {
+  var token = localStorage.getItem('datalogo_token');
+  fetch(API + '/auth/aprobar-usuario', {method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+token}, body:JSON.stringify({email:email,accion:accion})})
+  .then(function(r){return r.json();})
+  .then(function(){ cargarPendientes(); });
+}
+
+function cargarUsuarios() {
+  var token = localStorage.getItem('datalogo_token');
+  document.getElementById('admin-body').innerHTML = '<div class="admin-empty"><div class="admin-empty-icon">⏳</div>Cargando...</div>';
+  fetch(API + '/auth/usuarios', {headers:{'Authorization':'Bearer '+token}})
+  .then(function(r){return r.json();})
+  .then(function(data){
+    var body = document.getElementById('admin-body');
+    var usuarios = (data.usuarios||[]).filter(function(u){return !u.es_admin;});
+    if (!usuarios.length) { body.innerHTML = '<div class="admin-empty"><div class="admin-empty-icon">👥</div>No hay usuarios registrados</div>'; return; }
+    body.innerHTML = usuarios.map(function(u){
+      var areaOpts = ['ventas','atencion','inventario','calidad','finanzas','rh','compras','marketing','documental','produccion','direccion'].map(function(a){
+        return '<option value="'+a+'"'+(u.area===a?' selected':'')+'>'+a+'</option>';
+      }).join('');
+      return '<div class="user-card">'+
+        '<div class="user-card-top">'+
+          '<div class="user-avatar">'+u.nombre.charAt(0).toUpperCase()+'</div>'+
+          '<div class="user-info">'+
+            '<div class="user-nombre">'+u.nombre+'</div>'+
+            '<div class="user-meta">'+u.email+
+              (u.area?'<span class="badge badge-area">'+u.area+'</span>':'')+
+              (u.empresa_asignada?'<span class="badge badge-empresa">'+u.empresa_asignada+'</span>':'<span class="badge badge-pendiente">Sin empresa</span>')+
+              (!u.activo?'<span class="badge badge-inactivo">Inactivo</span>':'')+
+            '</div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="user-card-bottom">'+
+          '<select class="select-sm" onchange="cambiarArea(\''+u.email+'\',this.value)">'+
+            '<option value="">Cambiar área...</option>'+areaOpts+
+          '</select>'+
+          '<select class="select-sm" onchange="cambiarEmpresa(\''+u.email+'\',this.value)">'+
+            '<option value="">Cambiar empresa...</option>'+
+            '<option value="plasticos"'+(u.empresa_asignada==='plasticos'?' selected':'')+'>Plásticos del Norte</option>'+
+            '<option value="carnes"'+(u.empresa_asignada==='carnes'?' selected':'')+'>Carnes y Culinarios</option>'+
+          '</select>'+
+          '<button class="btn-sm btn-cambiar-pass" onclick="abrirCambioPass(\''+u.email+'\')">🔑 Contraseña</button>'+
+        '</div>'+
+      '</div>';
+    }).join('');
+  }).catch(function(){ document.getElementById('admin-body').innerHTML = '<div class="admin-empty">Error al cargar</div>'; });
+}
+
+function cambiarArea(email, area) {
+  if (!area) return;
+  var token = localStorage.getItem('datalogo_token');
+  fetch(API + '/auth/cambiar-area', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({token:token, email_usuario:email, area:area})})
+  .then(function(r){return r.json();})
+  .then(function(){ cargarUsuarios(); });
+}
+
+function cambiarEmpresa(email, empresa) {
+  if (!empresa) return;
+  var token = localStorage.getItem('datalogo_token');
+  fetch(API + '/auth/asignar-empresa', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({token:token, email_usuario:email, empresa:empresa})})
+  .then(function(r){return r.json();})
+  .then(function(){ cargarUsuarios(); });
+}
+
+function abrirCambioPass(email) {
+  emailCambioPass = email;
+  document.getElementById('modal-pass-email').textContent = email;
+  document.getElementById('nueva-pass').value = '';
+  limpiarMensaje('mensaje-pass');
+  document.getElementById('modalPass').classList.add('visible');
+}
+
+function cerrarModalPass() {
+  document.getElementById('modalPass').classList.remove('visible');
+  emailCambioPass = null;
+}
+
+function confirmarCambioPass() {
+  var pass = document.getElementById('nueva-pass').value;
+  if (!pass || pass.length < 6) { mostrarMensaje('mensaje-pass','error','Mínimo 6 caracteres.'); return; }
+  var token = localStorage.getItem('datalogo_token');
+  setBtnCargando('btn-login', false);
+  fetch(API + '/auth/cambiar-password', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({token:token, email_usuario:emailCambioPass, nueva_password:pass})})
+  .then(function(r){return r.json();})
+  .then(function(data){
+    if (data.exito) { cerrarModalPass(); cargarUsuarios(); }
+    else mostrarMensaje('mensaje-pass','error', data.error||'Error.');
+  });
 }
 
 // ── UTILS ──
