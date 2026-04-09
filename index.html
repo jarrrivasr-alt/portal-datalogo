@@ -529,6 +529,14 @@ function cargarUsuarios() {
   }).catch(function(){ document.getElementById('admin-body').innerHTML = '<div class="admin-empty">Error al cargar</div>'; });
 }
 
+function eliminarUsuario(email, nombre) {
+  if (!confirm('¿Eliminar a ' + nombre + '? No se puede deshacer.')) return;
+  var token = localStorage.getItem('datalogo_token');
+  fetch(API + '/auth/eliminar-usuario', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:token,email_usuario:email})})
+  .then(function(r){return r.json();})
+  .then(function(d){if(d.exito)cargarUsuarios();else alert('Error: '+(d.error||'No se pudo eliminar'));});
+}
+
 function cambiarArea(email, area) {
   if (!area) return;
   var token = localStorage.getItem('datalogo_token');
@@ -584,6 +592,7 @@ function mostrarMensaje(id, tipo, texto) {
   if (!el) return;
   el.className = 'mensaje ' + tipo;
   el.textContent = texto;
+  el.style.display = 'block';
 }
 
 function limpiarMensaje(id) {
