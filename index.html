@@ -523,7 +523,7 @@ function cargarUsuarios() {
             '<option value="carnes"'+(u.empresa_asignada==='carnes'?' selected':'')+'>Carnes y Culinarios</option>'+
           '</select>'+
           '<button class="btn-sm btn-cambiar-pass" onclick="abrirCambioPass(\''+u.email+'\')">🔑 Contraseña</button>'+
-          '<button class="btn-sm" style="background:#FEF2F2;color:#991B1B;border:1px solid #FECACA" onclick="eliminarUsuario(\''+u.email+'\',' \'+u.nombre+'\')" >🗑 Eliminar</button>'+
+          '<button class="btn-sm" style="background:#FEF2F2;color:#991B1B;border:1px solid #FECACA" onclick="eliminarUsuario(\''+u.email+'\',\''+u.nombre+'\')">🗑 Eliminar</button>'+
         '</div>'+
       '</div>';
     }).join('');
