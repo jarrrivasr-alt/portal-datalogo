@@ -180,7 +180,7 @@
         <div class="icono-pantalla" style="background:linear-gradient(135deg,#EFF6FF,#BFDBFE)">📧</div>
         <div class="pantalla-titulo">Verifica tu correo</div>
         <p class="pantalla-texto">Enviamos un enlace de activación a<br><span class="highlight" id="email-verif"></span><br><br>Revisa tu bandeja de entrada y haz clic en el enlace.</p>
-        <button class="btn-secundario" onclick="mostrarPantalla('auth')">Volver al inicio</button>
+        <button class="btn-secundario" onclick="mostrarPantalla('auth');cambiarTab('login')">Volver al inicio</button>
       </div>
     </div>
 
@@ -190,7 +190,7 @@
         <div class="icono-pantalla" style="background:linear-gradient(135deg,#FFFBEB,#FDE68A)">⏳</div>
         <div class="pantalla-titulo">Pendiente de aprobación</div>
         <p class="pantalla-texto">Tu correo fue verificado.<br><br>Un administrador aprobará tu acceso pronto. Recibirás un correo cuando esté listo.</p>
-        <button class="btn-secundario" onclick="mostrarPantalla('auth')">Volver al inicio</button>
+        <button class="btn-secundario" onclick="mostrarPantalla('auth');cambiarTab('login')">Volver al inicio</button>
       </div>
     </div>
 
@@ -261,6 +261,24 @@ var API = 'https://api.datalogo.lat';
 var usuarioActual = null;
 var emailCambioPass = null;
 var adminTabActual = 'pendientes';
+
+var EMPRESAS_UNICO_AGENTE = ['carnes'];
+document.addEventListener('DOMContentLoaded', function() {
+  var selEmp = document.getElementById('reg-empresa');
+  if (selEmp) selEmp.addEventListener('change', function() {
+    var grupoArea = document.getElementById('form-grupo-area') || document.getElementById('reg-area');
+    var selectArea = document.getElementById('reg-area');
+    if (!selectArea) return;
+    if (EMPRESAS_UNICO_AGENTE.indexOf(this.value) !== -1) {
+      selectArea.value = 'todo';
+      selectArea.disabled = true;
+      selectArea.parentElement.style.opacity = '0.5';
+    } else {
+      selectArea.disabled = false;
+      selectArea.parentElement.style.opacity = '1';
+    }
+  });
+});
 
 var AREA_AGENTES = {
   ventas:['ventas','atencion'], atencion:['atencion'], inventario:['inventario','calidad'],
@@ -465,7 +483,8 @@ function cargarPendientes() {
 
 function aprobarConEmpresa(email) {
   var idSafe = email.replace('@','_').replace('.','_');
-  var empresa = document.getElementById('empresa-'+idSafe) ? document.getElementById('empresa-'+idSafe).value : '';
+  var sel = document.getElementById('empresa-'+idSafe);
+  var empresa = sel && sel.value ? sel.value : (sel ? sel.getAttribute('data-solicitada') || '' : '');
   var token = localStorage.getItem('datalogo_token');
   // Aprobar primero
   fetch(API + '/auth/aprobar-usuario', {method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+token}, body:JSON.stringify({email:email,accion:'aprobar'})})
