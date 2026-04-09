@@ -519,7 +519,7 @@ function cargarUsuarios() {
     var usuarios = (data.usuarios||[]).filter(function(u){return !u.es_admin;});
     if (!usuarios.length) { body.innerHTML = '<div class="admin-empty"><div class="admin-empty-icon">👥</div>No hay usuarios registrados</div>'; return; }
     body.innerHTML = usuarios.map(function(u){
-      var areaOpts = ['ventas','atencion','inventario','calidad','finanzas','rh','compras','marketing','documental','produccion','direccion'].map(function(a){
+      var areaOpts = ['todo','superchat','ventas','atencion','inventario','calidad','finanzas','rh','compras','marketing','documental','produccion','direccion'].map(function(a){
         return '<option value="'+a+'"'+(u.area===a?' selected':'')+'>'+a+'</option>';
       }).join('');
       return '<div class="user-card">'+
