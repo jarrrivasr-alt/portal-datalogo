@@ -269,7 +269,6 @@ var EMPRESAS_UNICO_AGENTE = ['carnes'];
 document.addEventListener('DOMContentLoaded', function() {
   var selEmp = document.getElementById('reg-empresa');
   if (selEmp) selEmp.addEventListener('change', function() {
-    var grupoArea = document.getElementById('form-grupo-area') || document.getElementById('reg-area');
     var selectArea = document.getElementById('reg-area');
     if (!selectArea) return;
     if (EMPRESAS_UNICO_AGENTE.indexOf(this.value) !== -1) {
@@ -284,12 +283,21 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 var AREA_AGENTES = {
-  ventas:['ventas','atencion'], atencion:['atencion'], inventario:['inventario','calidad'],
-  calidad:['calidad'], finanzas:['finanzas'], rh:['rh'], compras:['compras','inventario'],
-  marketing:['marketing','ventas'], documental:['documental'], produccion:['produccion','calidad','inventario'],
-  direccion:['direccion','agente_ia','superchat','ventas','finanzas','produccion']
-  todo:['superchat','agente_ia','ventas','atencion','inventario','calidad','finanzas','rh','compras','marketing','documental','produccion','direccion'],
-  admin:['superchat','agente_ia','ventas','atencion','inventario','calidad','finanzas','rh','compras','marketing','documental','produccion','direccion']
+  ventas: ['ventas','atencion'],
+  atencion: ['atencion'],
+  inventario: ['inventario','calidad'],
+  calidad: ['calidad'],
+  finanzas: ['finanzas'],
+  rh: ['rh'],
+  compras: ['compras','inventario'],
+  marketing: ['marketing','ventas'],
+  documental: ['documental'],
+  produccion: ['produccion','calidad','inventario'],
+  superchat: ['superchat','agente_ia'],
+  agente_ia: ['agente_ia','superchat'],
+  direccion: ['direccion','agente_ia','superchat','ventas','finanzas','produccion'],
+  todo: ['superchat','agente_ia','ventas','atencion','inventario','calidad','finanzas','rh','compras','marketing','documental','produccion','direccion'],
+  admin: ['superchat','agente_ia','ventas','atencion','inventario','calidad','finanzas','rh','compras','marketing','documental','produccion','direccion']
 };
 
 window.onload = function() {
@@ -393,11 +401,9 @@ function renderizarEmpresas(empresas) {
   }).join('');
   mostrarPantalla('empresas');
 
-  // Mostrar botón admin
   if (usuarioActual && usuarioActual.es_admin) {
     var btn = document.getElementById('adminFloat');
     btn.style.display = 'flex';
-    // Contar pendientes
     var token = localStorage.getItem('datalogo_token');
     fetch(API + '/auth/pendientes', {headers:{'Authorization':'Bearer '+token}})
     .then(function(r){return r.json();})
@@ -413,9 +419,9 @@ function renderizarEmpresas(empresas) {
 
 function abrirEmpresa(key, url) {
   if (!url || url === 'null') { alert('Esta empresa no tiene URL configurada aún.'); return; }
-  var area  = usuarioActual&&usuarioActual.area ? usuarioActual.area : 'ventas';
-  var esAdmin = usuarioActual&&usuarioActual.es_admin;
-  var permitidos = esAdmin ? AREA_AGENTES['admin'] : (AREA_AGENTES[area]||[area]);
+  var area    = usuarioActual && usuarioActual.area ? usuarioActual.area : 'ventas';
+  var esAdmin = usuarioActual && usuarioActual.es_admin;
+  var permitidos = esAdmin ? AREA_AGENTES['admin'] : (AREA_AGENTES[area] || [area]);
   var params = new URLSearchParams({token:localStorage.getItem('datalogo_token')||'', nombre:usuarioActual&&usuarioActual.nombre||'', area:area, agentes:permitidos.join(',')});
   window.open(url + '?' + params.toString(), '_blank');
 }
@@ -488,14 +494,12 @@ function cargarPendientes() {
 function aprobarConEmpresa(email) {
   var idSafe = email.replace('@','_').replace('.','_');
   var sel = document.getElementById('empresa-'+idSafe);
-  var empresa = sel && sel.value ? sel.value : (sel ? sel.getAttribute('data-solicitada') || '' : '');
+  var empresa = sel && sel.value ? sel.value : '';
   var token = localStorage.getItem('datalogo_token');
-  // Aprobar primero
   fetch(API + '/auth/aprobar-usuario', {method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+token}, body:JSON.stringify({email:email,accion:'aprobar'})})
   .then(function(r){return r.json();})
   .then(function(data){
     if (data.exito && empresa) {
-      // Asignar empresa
       return fetch(API + '/auth/asignar-empresa', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({token:token, email_usuario:email, empresa:empresa})});
     }
     return Promise.resolve();
@@ -521,7 +525,8 @@ function cargarUsuarios() {
     var usuarios = (data.usuarios||[]).filter(function(u){return !u.es_admin;});
     if (!usuarios.length) { body.innerHTML = '<div class="admin-empty"><div class="admin-empty-icon">👥</div>No hay usuarios registrados</div>'; return; }
     body.innerHTML = usuarios.map(function(u){
-      var areaOpts = ['todo','superchat','agente_ia','ventas','atencion','inventario','calidad','finanzas','rh','compras','marketing','documental','produccion','direccion'].map(function(a){
+      var areas = ['todo','superchat','agente_ia','ventas','atencion','inventario','calidad','finanzas','rh','compras','marketing','documental','produccion','direccion'];
+      var areaOpts = areas.map(function(a){
         return '<option value="'+a+'"'+(u.area===a?' selected':'')+'>'+a+'</option>';
       }).join('');
       return '<div class="user-card">'+
@@ -594,7 +599,6 @@ function confirmarCambioPass() {
   var pass = document.getElementById('nueva-pass').value;
   if (!pass || pass.length < 6) { mostrarMensaje('mensaje-pass','error','Mínimo 6 caracteres.'); return; }
   var token = localStorage.getItem('datalogo_token');
-  setBtnCargando('btn-login', false);
   fetch(API + '/auth/cambiar-password', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({token:token, email_usuario:emailCambioPass, nueva_password:pass})})
   .then(function(r){return r.json();})
   .then(function(data){
