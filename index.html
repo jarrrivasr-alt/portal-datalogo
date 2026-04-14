@@ -156,7 +156,8 @@
           <select class="form-input" id="reg-area">
             <option value="">Selecciona tu área...</option>
             <option value="todo">── Ver todo (Director / Gerente General) ──</option>
-            <option value="superchat">Super Chat — Orquestador Central</option>
+            <option value="superchat">Consultas Directas — Gerencial</option>
+            <option value="agente_ia">Análisis Complejo — Directivo</option>
             <option value="ventas">Ventas y Comercial</option>
             <option value="atencion">Atención al Cliente</option>
             <option value="inventario">Inventario y Logística</option>
@@ -286,8 +287,9 @@ var AREA_AGENTES = {
   ventas:['ventas','atencion'], atencion:['atencion'], inventario:['inventario','calidad'],
   calidad:['calidad'], finanzas:['finanzas'], rh:['rh'], compras:['compras','inventario'],
   marketing:['marketing','ventas'], documental:['documental'], produccion:['produccion','calidad','inventario'],
-  direccion:['direccion','orquestador','ventas','finanzas','produccion','superchat'],
-  admin:['superchat','orquestador','ventas','atencion','inventario','calidad','finanzas','rh','compras','marketing','documental','produccion','direccion']
+  direccion:['direccion','agente_ia','superchat','ventas','finanzas','produccion']
+  todo:['superchat','agente_ia','ventas','atencion','inventario','calidad','finanzas','rh','compras','marketing','documental','produccion','direccion'],
+  admin:['superchat','agente_ia','ventas','atencion','inventario','calidad','finanzas','rh','compras','marketing','documental','produccion','direccion']
 };
 
 window.onload = function() {
@@ -519,7 +521,7 @@ function cargarUsuarios() {
     var usuarios = (data.usuarios||[]).filter(function(u){return !u.es_admin;});
     if (!usuarios.length) { body.innerHTML = '<div class="admin-empty"><div class="admin-empty-icon">👥</div>No hay usuarios registrados</div>'; return; }
     body.innerHTML = usuarios.map(function(u){
-      var areaOpts = ['todo','superchat','ventas','atencion','inventario','calidad','finanzas','rh','compras','marketing','documental','produccion','direccion'].map(function(a){
+      var areaOpts = ['todo','superchat','agente_ia','ventas','atencion','inventario','calidad','finanzas','rh','compras','marketing','documental','produccion','direccion'].map(function(a){
         return '<option value="'+a+'"'+(u.area===a?' selected':'')+'>'+a+'</option>';
       }).join('');
       return '<div class="user-card">'+
